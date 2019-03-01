@@ -11,6 +11,7 @@ void printIntro(); //prints intro text
 void printBoard();
 void printRules();
 int getValidInt(); //gets input from user and verifies it is an integer
+char getValidChar();
 char makeRandomCharacter();
 
 int xSize;
@@ -37,6 +38,14 @@ int getValidInt()
 
     inputNum = strtol(inputString, &ptr, 10);
     return (int)inputNum;
+}
+char getValidChar()
+{
+    char inputString[MAX_STRING_LEN];
+    scanf("%s",inputString);
+
+    char inputChar = inputString[0];
+    return inputChar;
 }
 void getBoardInfo() //returns totalLetters
 {
@@ -88,11 +97,22 @@ void printIntro()
 {
     printf("Welcome to boggle!");
     printf("Would you like to see the rules? y/n ");
-    char response;
-    scanf("%c", &response); //need some parsing here :)
-    if(response == 'y')
+    while (1)
     {
-        printRules();
+        char response = getValidChar();
+        if(response == 'y')
+        {
+            printRules();
+            break;
+        }
+        else if(response == 'n')
+        {
+            break;
+        }
+        else
+        {
+            printf("Invalid input. Would you like to see the rules? y/n ");
+        }
     }
 }
 void printRules()
