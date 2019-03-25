@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "scanner.h"
 #include "board.h"
+#include "words.h"
 
 void getBoardInfo(struct board *gameBoard) //returns totalLetters
 {
@@ -22,7 +23,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
     }
     if(gameBoard->rows > 20 || gameBoard->cols > 20)
     {
-        printf("Warning: Large game boards can lead to poor rendering and long load times.");
+        printf("WARNING: Large game boards can lead to poor rendering and long load times.");
     }
 }
 void fillBoard(struct board *gameBoard)
@@ -32,15 +33,18 @@ void fillBoard(struct board *gameBoard)
         for(int rows=0; rows < gameBoard->rows; rows++)
         {
             gameBoard->cubes[cols][rows] = makeRandomCharacter();
+            gameBoard->isVisted[cols][rows] = false;
         }
     }
 }
 void buildBoard(struct board *gameBoard)
 {
     gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
+    gameBoard->isVisted = (bool**) calloc(gameBoard->rows, sizeof(bool*));
     for ( int i = 0; i < gameBoard->rows; i++ )
     {
         gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
+        gameBoard->isVisted[i] = (bool*) calloc(gameBoard->cols, sizeof(bool));
     }
 }
 char makeRandomCharacter()
@@ -84,5 +88,15 @@ void freeBoard(struct board *gameBoard)
         free(gameBoard->cubes[i]);
     }
     free(gameBoard->cubes);
+}
 
+void findWords(struct board *gameBoard, struct dictionary *myDict) //DFS algo to find all legal words on the board
+{
+    for(int cols = 0; cols < gameBoard->cols; cols++)
+    {
+        for(int rows = 0; rows < gameBoard->rows; rows++)
+        {
+
+        }
+    }
 }

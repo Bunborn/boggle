@@ -1,6 +1,7 @@
 //
 // Created by Brandon on 3/25/2019.
 //
+#include "words.h"
 #ifndef BOGGLE_BOARD_H
 #define BOGGLE_BOARD_H
 //Add:struct for a letter cube
@@ -11,12 +12,12 @@ struct board
     char** cubes;
     bool** isVisted;
 };
-
+void findWords(struct board *gameBoard, struct dictionary *myDict);
 void printBoard(struct board *gameBoard);
 void getBoardInfo(struct board *gameBoard);
 char makeRandomCharacter();
 void buildBoard(struct board *gameBoard); //allocates heap memory for board
 void fillBoard(struct board *gameBoard); //fills board with random chars
-void freeBoard();
+void freeBoard(struct board *gameBoard);
 
 #endif //BOGGLE_BOARD_H

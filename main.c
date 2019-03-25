@@ -24,26 +24,29 @@ int main() {
     struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
     buildDictionary(myDictionary);
     myDictionary->dictionaryPtr = fptr;
-    int totalWords = countDictionaryWords(myDictionary);
-    printf("You are using %d words\n", totalWords);
+    countDictionaryWords(myDictionary);
+    //printf("You are using %d words\n", totalWords);
     readDictionaryFile(myDictionary);
 
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
-    //struct board gameBoard;// = malloc(sizeof(struct board));
+    printf("Large game boards can lead to poor rendering and long load times.\n");
     struct board *gameBoard = malloc(sizeof(struct board));
     getBoardInfo(gameBoard);
     buildBoard(gameBoard);
     fillBoard(gameBoard);
     printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
+    printf("Loading...\n");
+    findWords(gameBoard, myDictionary);
     printBoard(gameBoard);
 
 
-    freeBoard();
+    freeBoard(gameBoard);
+    freeDictionary(myDictionary);
 }
 void printIntro()
 {
-    printf("Welcome to boggle!");
+    printf("Welcome to boggle!\n");
     printf("Would you like to see the rules? y/n ");
     while (1)
     {
@@ -66,7 +69,7 @@ void printIntro()
 void printRules()
 {
     printf("\nFind as many words as you can on the given board!\n");
-    printf("Choose time challenge for the true boggle experience.\n");
+    printf("You will have 3 minutes to find these words.\n");
     printf("The letters must form a chain - which can be connected horizontally, vertically, or diagonally from one another.\n");
     printf("Words must contain at least 3 letters.\n");
     printf("This program will allow words from the dictionary file \"dictionary.txt\".\n");

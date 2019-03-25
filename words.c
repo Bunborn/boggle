@@ -31,14 +31,22 @@ void readDictionaryFile(struct dictionary *myDictionary)
         myDictionary->words[i] = readLine(myDictionary->dictionaryPtr);
     }
 }
-
-
-
 void buildDictionary(struct dictionary *myDict)
 {
+    myDict->isFound = malloc(sizeof(bool) * myDict->numWords);
     myDict->words = (char**) calloc(myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
         myDict->words[i] = (char*) calloc(25, sizeof(char));
+        myDict->isFound[i] = false;
+
     }
+}
+void freeDictionary(struct dictionary *myDict)
+{
+    for ( int i = 0; i < myDict->numWords; i++ )
+    {
+        free(myDict->words[i]);
+    }
+    free(myDict->words);
 }
