@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <zconf.h>
+#include <stdbool.h>
+#include "board.h"
+#include "scanner.h"
+#include <zconf.h> //to be removed
+
 
 #define MAX_STRING_LEN 80
 
-void getBoardInfo(); //returns totalLetters
 void printIntro(); //prints intro text
-void printBoard();
 void printRules();
-int getValidInt(); //gets input from user and verifies it is an integer
-char getValidChar();
-char makeRandomCharacter();
+
 
 int xSize;
 int ySize;
@@ -20,78 +20,19 @@ int totalLetters;
 
 int main() {
     srand(time(0)); //use current time as seed for random generator.
+
+
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
-    getBoardInfo();
-    printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", xSize, ySize, totalLetters);
-    printBoard();
+    struct board gameBoard;// = malloc(sizeof(struct board));
+    getBoardInfo(&gameBoard);
 
-}
+    //https://www.geeksforgeeks.org/dynamically-allocate-2d-array-c/ better
+    //struct board * gameBoard = malloc(sizeof(struct board));
+    //gameBoard->cubes  = (char **)malloc(sizeof(char)*totalLetters);
+    printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard.cols, gameBoard.rows, gameBoard.cols * gameBoard.rows);
+    printBoard(&gameBoard);
 
-int getValidInt()
-{
-    char inputString[MAX_STRING_LEN];
-    scanf("%s",inputString);
-
-    char *ptr;
-    long inputNum;
-
-    inputNum = strtol(inputString, &ptr, 10);
-    return (int)inputNum;
-}
-char getValidChar()
-{
-    char inputString[MAX_STRING_LEN];
-    scanf("%s",inputString);
-
-    char inputChar = inputString[0];
-    return inputChar;
-}
-void getBoardInfo() //returns totalLetters
-{
-    printf("Number of horizontal letters:" );
-    xSize = getValidInt();
-    printf("Number of vertical letters: ");
-    ySize = getValidInt();
-    totalLetters = xSize * ySize;
-    if(xSize < 3 || ySize < 3) //invalid board size
-    {
-        printf("This is not a valid board. (minimum 3x3)\n");
-        getBoardInfo();
-    }
-}
-char makeRandomCharacter()
-{
-    int randomInt = rand();
-    randomInt = randomInt % 26;
-    char randomCharacter = randomInt + 65; //convert random integer to ASCII uppercase letter
-    return randomCharacter;
-}
-void printBoard()
-{
-    int i=0;
-    int j=0;
-    printf(" ");
-    for(i=0; i<2*xSize+1; i++)
-    {
-        printf("-");
-    }
-    printf("\n");
-    for(j=0; j< ySize; j++)
-    {
-        sleep(1);
-        printf("|");
-        for(i=0; i< xSize; i++)
-        {
-            printf(" %c", makeRandomCharacter());
-        }
-        printf(" |\n");
-    }
-    printf(" ");
-    for(i=0; i<2*xSize+1; i++)
-    {
-        printf("-");
-    }
 }
 void printIntro()
 {
