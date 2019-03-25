@@ -39,8 +39,19 @@ void buildDictionary(struct dictionary *myDict)
     {
         myDict->words[i] = (char*) calloc(25, sizeof(char));
         myDict->isFound[i] = false;
-
     }
+}
+
+bool isValidWord(char* input, struct dictionary *myDict)
+{
+    for(int i=0; i<myDict->numWords; i++)
+    {
+        if(strcmp(input, myDict->words[i]) == 0)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 void freeDictionary(struct dictionary *myDict)
 {

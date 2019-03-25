@@ -20,4 +20,5 @@ void buildBoard(struct board *gameBoard); //allocates heap memory for board
 void fillBoard(struct board *gameBoard); //fills board with random chars
 void freeBoard(struct board *gameBoard);
 
+
 #endif //BOGGLE_BOARD_H
