@@ -31,15 +31,26 @@ int main() {
 
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
-    printf("Large game boards can lead to poor rendering and long load times.\n");
+    printf("Game boards above 4x4 can lead to either poor rendering or long initial load time.\n");
     struct board *gameBoard = malloc(sizeof(struct board));
     getBoardInfo(gameBoard);
     buildBoard(gameBoard);
     fillBoard(gameBoard);
     printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
+    printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to end early\n");
     printf("Loading...\n");
     findAllWords(gameBoard, myDictionary);
     printBoard(gameBoard);
+
+    clock_t startTime, currentTime;
+    double timeElapsed = 0.0;
+    startTime = clock();
+    while(timeElapsed<10.0)
+    {
+        currentTime = clock();
+        timeElapsed = ((double)currentTime - startTime)/CLOCKS_PER_SEC;
+        
+    }
 
 
     freeBoard(gameBoard);

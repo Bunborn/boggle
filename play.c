@@ -7,9 +7,9 @@
 void findAllWords(struct board *gameBoard, struct dictionary *myDict) //DFS algo to find all legal words on the board
 {
     char string[25] = "";
-    for(int cols = 0; cols < gameBoard->cols; cols++)
+    for(int rows = 0; rows < gameBoard->rows; rows++)
     {
-        for(int rows = 0; rows < gameBoard->rows; rows++)
+        for(int cols = 0; cols < gameBoard->cols; cols++)
         {
             search(gameBoard, myDict, rows, cols, string);
         }
