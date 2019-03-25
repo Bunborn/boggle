@@ -26,13 +26,8 @@ void search(struct board *gameBoard, struct dictionary *myDict, int rows, int co
 
     if(isValidWord(string, myDict))
     {
-        printf("%s is a valid word!", string);
+        printf("%s is a valid word!\n", string);
     }
-    else
-    {
-        //printf("%s is not a valid word", string);
-    }
-
     for(int i = rows - 1; i <= rows + 1 && i < gameBoard->rows; i++ )
     {
         for(int j = cols - 1; j <= cols+1 && j < gameBoard->cols; j++)
@@ -41,7 +36,6 @@ void search(struct board *gameBoard, struct dictionary *myDict, int rows, int co
                 search(gameBoard, myDict, i, j, string);
         }
     }
-
     string[stringLength-1] = '\0';
     gameBoard->isVisted[rows][cols] = false;
 }
