@@ -26,6 +26,17 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
         printf("Warning: Large game boards can lead to poor rendering on your monitor.");
     }
 }
+void fillBoard(struct board *gameBoard)
+{
+    for(int cols = 0; cols < gameBoard->cols; cols++)
+    {
+        for(int rows=0; rows < gameBoard->rows; rows++)
+        {
+            gameBoard->cubes[cols][rows] = makeRandomCharacter();
+        }
+    }
+
+}
 char makeRandomCharacter()
 {
     int randomInt = rand();
@@ -63,4 +74,6 @@ void printBoard(struct board *gameBoard)
 void freeBoard(struct board *gameBoard)
 {
     free(gameBoard);
+
+
 }

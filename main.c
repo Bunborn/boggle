@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "board.h"
 #include "scanner.h"
+#include <time.h>
 #include <zconf.h> //to be removed
 
 void printIntro(); //prints intro text
@@ -17,14 +18,17 @@ int main() {
 
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
-    struct board gameBoard;// = malloc(sizeof(struct board));
-    getBoardInfo(&gameBoard);
-
-    //https://www.geeksforgeeks.org/dynamically-allocate-2d-array-c/ better
-    //struct board * gameBoard = malloc(sizeof(struct board));
-    //gameBoard->cubes  = (char **)malloc(sizeof(char)*totalLetters);
-    printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard.cols, gameBoard.rows, gameBoard.cols * gameBoard.rows);
-    printBoard(&gameBoard);
+    //struct board gameBoard;// = malloc(sizeof(struct board));
+    struct board *gameBoard = malloc(sizeof(struct board));
+    getBoardInfo(gameBoard);
+    gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
+    for ( int i = 0; i < gameBoard->rows; i++ )
+    {
+        gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
+    }
+    fillBoard(gameBoard);
+    printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
+    printBoard(gameBoard);
 
 }
 void printIntro()

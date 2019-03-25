@@ -6,8 +6,8 @@
 //Add:struct for a letter cube
 struct board
 {
-    int rows;
-    int cols;
+    unsigned int rows;
+    unsigned int cols;
     char** cubes;
     bool** isVisted;
 };
@@ -15,6 +15,7 @@ struct board
 void printBoard(struct board *gameBoard);
 void getBoardInfo(struct board *gameBoard); //returns totalLetters
 char makeRandomCharacter();
+void fillBoard(struct board *gameBoard);
 void freeBoard();
 
 #endif //BOGGLE_BOARD_H

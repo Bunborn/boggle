@@ -10,7 +10,7 @@ static void *reallocateMsg(void *s,size_t size,char *where);
 /* VERSION 1.3
  *
  * scanner.c - a collection of input routines for C
- *           - written by John C. Lusth
+ *           - written by John C. Lusth and modified by Brandon Stevens
  *           - in general, the functions return what is implied by their names
  *
  *    readInt(FILE *)
