@@ -60,3 +60,7 @@ void printBoard(struct board *gameBoard)
     }
 }
 
+void freeBoard(struct board *gameBoard)
+{
+    free(gameBoard);
+}

@@ -15,5 +15,6 @@ struct board
 void printBoard(struct board *gameBoard);
 void getBoardInfo(struct board *gameBoard); //returns totalLetters
 char makeRandomCharacter();
+void freeBoard();
 
 #endif //BOGGLE_BOARD_H

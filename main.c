@@ -7,16 +7,9 @@
 #include "scanner.h"
 #include <zconf.h> //to be removed
 
-
-#define MAX_STRING_LEN 80
-
 void printIntro(); //prints intro text
 void printRules();
 
-
-int xSize;
-int ySize;
-int totalLetters;
 
 int main() {
     srand(time(0)); //use current time as seed for random generator.
@@ -62,7 +55,7 @@ void printRules()
     printf("Choose time challenge for the true boggle experience.\n");
     printf("The letters must form a chain - which can be connected horizontally, vertically, or diagonally from one another.\n");
     printf("Words must contain at least 3 letters.\n");
-    printf("This program will allow words from the extensive 2015 Collins Scrabble list.\n");
+    printf("This program will allow words from the dictionary file \"dictionary.txt\".\n");
     printf("You cannot reuse letter cubes in a single word or reuse the same word.\n");
     printf("-------------------------------\n");
     printf("You will get more points for longer words as follows:\n");
