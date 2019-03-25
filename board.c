@@ -6,7 +6,6 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
-#include <zconf.h>
 #include "scanner.h"
 #include "board.h"
 
@@ -23,7 +22,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
     }
     if(gameBoard->rows > 20 || gameBoard->cols > 20)
     {
-        printf("Warning: Large game boards can lead to poor rendering on your monitor.");
+        printf("Warning: Large game boards can lead to poor rendering and long load times.");
     }
 }
 void fillBoard(struct board *gameBoard)
@@ -35,7 +34,14 @@ void fillBoard(struct board *gameBoard)
             gameBoard->cubes[cols][rows] = makeRandomCharacter();
         }
     }
-
+}
+void buildBoard(struct board *gameBoard)
+{
+    gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
+    for ( int i = 0; i < gameBoard->rows; i++ )
+    {
+        gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
+    }
 }
 char makeRandomCharacter()
 {
@@ -56,11 +62,11 @@ void printBoard(struct board *gameBoard)
     printf("\n");
     for(j=0; j< gameBoard->cols; j++)
     {
-        sleep(1);
+        //sleep(1);
         printf("|");
         for(i=0; i< gameBoard->rows; i++)
         {
-            printf(" %c", makeRandomCharacter());
+            printf(" %c", gameBoard->cubes[j][i]);
         }
         printf(" |\n");
     }
@@ -73,7 +79,10 @@ void printBoard(struct board *gameBoard)
 
 void freeBoard(struct board *gameBoard)
 {
-    free(gameBoard);
-
+    for ( int i = 0; i < gameBoard->rows; i++ )
+    {
+        free(gameBoard->cubes[i]);
+    }
+    free(gameBoard->cubes);
 
 }

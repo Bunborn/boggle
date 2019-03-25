@@ -13,9 +13,10 @@ struct board
 };
 
 void printBoard(struct board *gameBoard);
-void getBoardInfo(struct board *gameBoard); //returns totalLetters
+void getBoardInfo(struct board *gameBoard);
 char makeRandomCharacter();
-void fillBoard(struct board *gameBoard);
+void buildBoard(struct board *gameBoard); //allocates heap memory for board
+void fillBoard(struct board *gameBoard); //fills board with random chars
 void freeBoard();
 
 #endif //BOGGLE_BOARD_H

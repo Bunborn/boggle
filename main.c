@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #include "board.h"
 #include "scanner.h"
+#include "words.h"
 #include <time.h>
-#include <zconf.h> //to be removed
 
 void printIntro(); //prints intro text
 void printRules();
@@ -14,22 +14,32 @@ void printRules();
 
 int main() {
     srand(time(0)); //use current time as seed for random generator.
-
+    FILE *fptr;
+    fptr = fopen("dictionary.txt", "r");
+    if (fptr == NULL)
+    {
+        printf("Cannot open dictionary.txt file. Refer to readme for help. \n");
+        exit(0);
+    }
+    struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
+    buildDictionary(myDictionary);
+    myDictionary->dictionaryPtr = fptr;
+    int totalWords = countDictionaryWords(myDictionary);
+    printf("You are using %d words\n", totalWords);
+    readDictionaryFile(myDictionary);
 
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
     //struct board gameBoard;// = malloc(sizeof(struct board));
     struct board *gameBoard = malloc(sizeof(struct board));
     getBoardInfo(gameBoard);
-    gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
-    for ( int i = 0; i < gameBoard->rows; i++ )
-    {
-        gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
-    }
+    buildBoard(gameBoard);
     fillBoard(gameBoard);
     printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
     printBoard(gameBoard);
 
+
+    freeBoard();
 }
 void printIntro()
 {
