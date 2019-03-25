@@ -90,13 +90,3 @@ void freeBoard(struct board *gameBoard)
     free(gameBoard->cubes);
 }
 
-void findWords(struct board *gameBoard, struct dictionary *myDict) //DFS algo to find all legal words on the board
-{
-    for(int cols = 0; cols < gameBoard->cols; cols++)
-    {
-        for(int rows = 0; rows < gameBoard->rows; rows++)
-        {
-
-        }
-    }
-}

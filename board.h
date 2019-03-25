@@ -12,7 +12,7 @@ struct board
     char** cubes;
     bool** isVisted;
 };
-void findWords(struct board *gameBoard, struct dictionary *myDict);
+
 void printBoard(struct board *gameBoard);
 void getBoardInfo(struct board *gameBoard);
 char makeRandomCharacter();

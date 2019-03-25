@@ -46,12 +46,22 @@ bool isValidWord(char* input, struct dictionary *myDict)
 {
     for(int i=0; i<myDict->numWords; i++)
     {
-        if(strcmp(input, myDict->words[i]) == 0)
+        if(strcmp(input, myDict->words[i]) == 0 && myDict->isFound[i] == false)
         {
+            myDict->isFound[i] = true;
             return true;
         }
     }
     return false;
+}
+int strLength(char* input)
+{
+    int len = 0;
+    while(input[len] != '\0')
+    {
+        len++;
+    }
+    return len;
 }
 void freeDictionary(struct dictionary *myDict)
 {

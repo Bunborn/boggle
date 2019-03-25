@@ -6,6 +6,7 @@
 #include "board.h"
 #include "scanner.h"
 #include "words.h"
+#include "play.h"
 #include <time.h>
 
 void printIntro(); //prints intro text
@@ -37,7 +38,7 @@ int main() {
     fillBoard(gameBoard);
     printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
     printf("Loading...\n");
-    findWords(gameBoard, myDictionary);
+    findAllWords(gameBoard, myDictionary);
     printBoard(gameBoard);
 
 
