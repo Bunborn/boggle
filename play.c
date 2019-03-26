@@ -14,6 +14,16 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
             search(gameBoard, myDict, currGame, rows, cols, string);
         }
     }
+    int counter = 0;
+    for(int i=0; i<myDict->numWords;i++)
+    {
+        if(myDict->isOnBoard[i] == true)
+        {
+            currGame->validWordList[i] = myDict->words[i];
+            printf("added %s into valid word list\n", currGame->validWordList[i]);
+            counter++;
+        }
+    }
 }
 
 void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int rows, int cols, char* string)
@@ -23,23 +33,26 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
 
     string[stringLength] = tolower(gameBoard->cubes[rows][cols]);
     string[stringLength+1] = '\0';
-
-    if(findValidWord(string, myDict)>0)
+    //printf("Checking word: %s\n", string);
+    int wordIndex = findValidWord(string, myDict);
+    if(wordIndex>0)
     {
-        currGame->validWordList[currGame->numValidWords] = string;
-        printf("added %s into validwordlist at index %d\n", currGame->validWordList[currGame->numValidWords], currGame->numValidWords);
+        myDict->isOnBoard[wordIndex] = true;
+        //currGame->validWordList[currGame->numValidWords] = string;
+        //printf("added %s into validwordlist at index %d\n", currGame->validWordList[currGame->numValidWords], currGame->numValidWords);
         currGame->numValidWords++;
         currGame->totalPossibleScore += findPoints(string);
        // printf("%s is valid\n", string);
     }
     for(int i = rows - 1; i <= rows + 1 && i < gameBoard->rows; i++ ) //dfs in all 8 possible directions
     {
-        for(int j = cols - 1; j <= cols+1 && j < gameBoard->cols; j++)
+        for(int j = cols - 1; j <= cols+1 && j < gameBoard->cols; j++ )
         {
             if(i>=0 && j>= 0 && gameBoard->isVisted[i][j] == false)
                 search(gameBoard, myDict, currGame, i, j, string);
         }
     }
+
     string[stringLength-1] = '\0';
     gameBoard->isVisted[rows][cols] = false;
 }
@@ -76,7 +89,21 @@ void printScore(struct game *currGame)
 {
     printf("Current user score is: %d\n", currGame->score);
 }
-
+void fillValidWords(struct game *currGame, struct dictionary *myDictionary)
+{
+    int counter=0;
+    for(int i=0; i<myDictionary->numWords; i++)
+    {
+        if(myDictionary->isOnBoard[i]==true)
+        {
+            printf("this word is pretty dope: %s \n", myDictionary->words[i]);
+            currGame->validWordList[counter] = myDictionary->words[i];
+            counter++;
+        }
+        //currGame->validWordList[i] = "aaaa";
+        //printf("\ni = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
+    } //debugging purposes
+}
 void freeGame(struct game *currGame)
 {
     free(currGame);

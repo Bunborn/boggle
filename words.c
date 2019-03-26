@@ -34,11 +34,13 @@ void readDictionaryFile(struct dictionary *myDictionary)
 void buildDictionary(struct dictionary *myDict)
 {
     myDict->isFound = malloc(sizeof(bool) * myDict->numWords);
-    myDict->words = (char**) calloc(myDict->numWords, sizeof(char*));
+    myDict->isOnBoard = malloc(sizeof(bool) * myDict->numWords);
+    myDict->words = (char**) calloc((unsigned)myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
         myDict->words[i] = (char*) calloc(40, sizeof(char));
         myDict->isFound[i] = false;
+        myDict->isOnBoard[i] = false;
     }
 }
 

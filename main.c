@@ -16,7 +16,7 @@ void printRules(); //prints boggle rules
 int main() {
     srand(time(0)); //use current time as seed for random generator.
     FILE *fptr; //file pointer
-    fptr = fopen("./dictionary.txt", "r"); //opens dictionary file
+    fptr = fopen("dictionary.txt", "r"); //opens dictionary file
     if (fptr == NULL)
     {
         printf("Cannot open dictionary.txt file. Refer to readme for help. \n");
@@ -45,19 +45,29 @@ int main() {
     printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to end early\n");
     printf("Loading...\n");
     findAllWords(gameBoard, myDictionary, currGame);
+    fillValidWords(currGame, myDictionary);
     printBoard(gameBoard);
+
+
+    /*for(int i=0; i<currGame->numValidWords; i++)
+    {
+        //currGame->validWordList[i] = "aaaa";
+        printf("\n1.i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
+    } //debugging purposes
 
     for(int i=0; i<currGame->numValidWords; i++)
     {
-        printf("i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
+        //currGame->validWordList[i] = "aaaa";
+        printf("\n2.i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
     } //debugging purposes
-
+*/
     currGame->score = 0;
     clock_t startTime, currentTime;
     double timeElapsed = 0.0;
     startTime = clock();
     currentTime = clock();
     char* userInput;
+    fflush(stdin);
     while(timeElapsed<30.0)
     {
         userInput = readLine(stdin);
@@ -72,20 +82,16 @@ int main() {
             break;
         for(int i=0; i<currGame->numValidWords; i++)
         {
-            //printf("i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
-            if((strcmp(userInput,currGame->validWordList[i]) == 0))// && currGame->beenGuessed[i] == false)
+            printf("3.i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
+            if((strncmp(userInput,currGame->validWordList[i], 45) == 0))// && currGame->beenGuessed[i] == false)
             {
                 printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
                 currGame->beenGuessed[i] = true;
-                i=currGame->numValidWords;
-            }
-            else
-            {
-                printf("%s is NOT a match.", userInput);
-                i=currGame->numValidWords;
-                //break;
+                break;
             }
         }
+        printf("%s is NOT a match.", userInput);
+
 
     }
     printf("Game over! You scored a total of %d\n",currGame->score);

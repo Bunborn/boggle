@@ -79,6 +79,7 @@ void printBoard(struct board *gameBoard)
     {
         printf("-");
     }
+    printf("\n");
 }
 
 void freeBoard(struct board *gameBoard)
