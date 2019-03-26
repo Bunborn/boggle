@@ -22,6 +22,7 @@ int main() {
         printf("Cannot open dictionary.txt file. Refer to readme for help. \n");
         exit(0);
     }
+    struct game *currGame = malloc(sizeof(struct game));
     struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
     buildDictionary(myDictionary);
     myDictionary->dictionaryPtr = fptr;
@@ -39,22 +40,35 @@ int main() {
     printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
     printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to end early\n");
     printf("Loading...\n");
-    findAllWords(gameBoard, myDictionary);
+    findAllWords(gameBoard, myDictionary, currGame);
     printBoard(gameBoard);
+
+
 
     clock_t startTime, currentTime;
     double timeElapsed = 0.0;
     startTime = clock();
+    char* userInput;
     while(timeElapsed<10.0)
     {
         currentTime = clock();
-        timeElapsed = ((double)currentTime - startTime)/CLOCKS_PER_SEC;
-        
+        timeElapsed = ((double)currentTime - (double)startTime)/CLOCKS_PER_SEC;
+        userInput = readLine(stdin);
+        if(strcmp(userInput,"1") == 0)
+            printBoard(gameBoard);
+        if(strcmp(userInput,"2") == 0)
+            ;//print score
+        if(strcmp(userInput,"3") == 0)
+            break;
+
     }
+    printf("Game over! You scored a total of ");
+    printf("The total possible score was %d", currGame->totalPossibleScore);
 
 
     freeBoard(gameBoard);
     freeDictionary(myDictionary);
+    freeGame(currGame);
 }
 void printIntro()
 {

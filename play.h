@@ -12,10 +12,14 @@
 #include "words.h"
 #ifndef BOGGLE_PLAY_H
 #define BOGGLE_PLAY_H
-struct gameState
+struct game
 {
     int score;
+    int numValidWords;
+    int totalPossibleScore;
 };
-void findAllWords(struct board *gameBoard, struct dictionary *myDict);
-void search(struct board *gameBoard, struct dictionary *myDict, int col, int row, char* string);
+void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame);
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, char* string);
+int findPoints(char* string, struct game *currGame);
+void freeGame(struct game *currGame);
 #endif //BOGGLE_PLAY_H
