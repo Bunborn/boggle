@@ -17,9 +17,13 @@ struct game
     int score;
     int numValidWords;
     int totalPossibleScore;
+    char ** validWordList;
+    bool * beenGuessed;
 };
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame);
 void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, char* string);
-int findPoints(char* string, struct game *currGame);
+void buildGame(struct game *currGame, struct dictionary *myDict);
+int findPoints(char* string);
+void printScore(struct game *currGame);
 void freeGame(struct game *currGame);
 #endif //BOGGLE_PLAY_H

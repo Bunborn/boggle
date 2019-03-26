@@ -22,13 +22,14 @@ int main() {
         printf("Cannot open dictionary.txt file. Refer to readme for help. \n");
         exit(0);
     }
-    struct game *currGame = malloc(sizeof(struct game));
     struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
     buildDictionary(myDictionary);
     myDictionary->dictionaryPtr = fptr;
     countDictionaryWords(myDictionary);
-    //printf("You are using %d words\n", totalWords);
     readDictionaryFile(myDictionary);
+
+    struct game *currGame = malloc(sizeof(struct game));
+    buildGame(currGame, myDictionary);
 
     printIntro();
     printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
@@ -44,12 +45,12 @@ int main() {
     printBoard(gameBoard);
 
 
-
+    currGame->score = 0;
     clock_t startTime, currentTime;
     double timeElapsed = 0.0;
     startTime = clock();
     char* userInput;
-    while(timeElapsed<10.0)
+    while(timeElapsed<15.0)
     {
         currentTime = clock();
         timeElapsed = ((double)currentTime - (double)startTime)/CLOCKS_PER_SEC;
@@ -57,13 +58,28 @@ int main() {
         if(strcmp(userInput,"1") == 0)
             printBoard(gameBoard);
         if(strcmp(userInput,"2") == 0)
-            ;//print score
+            printScore(currGame);
         if(strcmp(userInput,"3") == 0)
             break;
+        for(int i=0; i<currGame->numValidWords; i++)
+        {
+            if((strcmp(userInput,currGame->validWordList[i]) == 0))// && currGame->beenGuessed[i] == false)
+            {
+                printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
+                currGame->beenGuessed[i] = true;
+                i=currGame->numValidWords;
+            }
+            else
+            {
+                printf("%s is NOT a match.", userInput);
+                i=currGame->numValidWords;
+                //break;
+            }
+        }
 
     }
-    printf("Game over! You scored a total of ");
-    printf("The total possible score was %d", currGame->totalPossibleScore);
+    printf("Game over! You scored a total of %d\n",currGame->score);
+    printf("The total possible score was %d.", currGame->totalPossibleScore);
 
 
     freeBoard(gameBoard);

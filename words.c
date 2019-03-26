@@ -37,7 +37,7 @@ void buildDictionary(struct dictionary *myDict)
     myDict->words = (char**) calloc(myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
-        myDict->words[i] = (char*) calloc(25, sizeof(char));
+        myDict->words[i] = (char*) calloc(40, sizeof(char));
         myDict->isFound[i] = false;
     }
 }

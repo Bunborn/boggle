@@ -26,9 +26,10 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
 
     if(isValidWord(string, myDict))
     {
+        currGame->validWordList[currGame->numValidWords] = string;
         currGame->numValidWords++;
-        currGame->totalPossibleScore += findPoints(string, currGame);
-        //currGame->
+        currGame->totalPossibleScore += findPoints(string);
+        printf("%s is valid\n", string);
     }
     for(int i = rows - 1; i <= rows + 1 && i < gameBoard->rows; i++ ) //dfs in all 8 possible directions
     {
@@ -42,7 +43,7 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
     gameBoard->isVisted[rows][cols] = false;
 }
 
-int findPoints(char* string, struct game *currGame)
+int findPoints(char* string)
 {
     int points=0;
     int stringLength = strLength(string);
@@ -58,6 +59,23 @@ int findPoints(char* string, struct game *currGame)
         points = 11;
     printf("%s is worth %d\n", string, points);
     return points;
+}
+void buildGame(struct game *currGame, struct dictionary *myDict)
+{
+    currGame->beenGuessed = malloc(sizeof(bool) * myDict->numWords);
+    currGame->validWordList = (char**) calloc((unsigned)myDict->numWords, sizeof(char*));
+    for ( int i = 0; i < myDict->numWords; i++ )
+    {
+        currGame->validWordList[i] = (char*) calloc(40, sizeof(char));
+        currGame->beenGuessed = false;
+    }
+    currGame->numValidWords = 0;
+    currGame->score = 0;
+    currGame->totalPossibleScore = 0;
+}
+void printScore(struct game *currGame)
+{
+    printf("Current user score is: %d\n", currGame->score);
 }
 
 void freeGame(struct game *currGame)
