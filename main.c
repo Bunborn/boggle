@@ -16,7 +16,7 @@ void printRules();
 int main() {
     srand(time(0)); //use current time as seed for random generator.
     FILE *fptr;
-    fptr = fopen("dictionary.txt", "r");
+    fptr = fopen("./dictionary.txt", "r");
     if (fptr == NULL)
     {
         printf("Cannot open dictionary.txt file. Refer to readme for help. \n");
