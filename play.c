@@ -21,15 +21,16 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
     int stringLength = strLength(string);
     gameBoard->isVisted[rows][cols] = true;
 
-    string[stringLength] = toupper(gameBoard->cubes[rows][cols]);
+    string[stringLength] = tolower(gameBoard->cubes[rows][cols]);
     string[stringLength+1] = '\0';
 
-    if(isValidWord(string, myDict))
+    if(findValidWord(string, myDict)>0)
     {
         currGame->validWordList[currGame->numValidWords] = string;
+        printf("added %s into validwordlist at index %d\n", currGame->validWordList[currGame->numValidWords], currGame->numValidWords);
         currGame->numValidWords++;
         currGame->totalPossibleScore += findPoints(string);
-        printf("%s is valid\n", string);
+       // printf("%s is valid\n", string);
     }
     for(int i = rows - 1; i <= rows + 1 && i < gameBoard->rows; i++ ) //dfs in all 8 possible directions
     {
@@ -69,9 +70,7 @@ void buildGame(struct game *currGame, struct dictionary *myDict)
         currGame->validWordList[i] = (char*) calloc(40, sizeof(char));
         currGame->beenGuessed = false;
     }
-    currGame->numValidWords = 0;
-    currGame->score = 0;
-    currGame->totalPossibleScore = 0;
+
 }
 void printScore(struct game *currGame)
 {

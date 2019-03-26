@@ -42,7 +42,7 @@ void buildDictionary(struct dictionary *myDict)
     }
 }
 
-bool isValidWord(char* input, struct dictionary *myDict)
+int findValidWord(char* input, struct dictionary *myDict)
 {
     int length = strLength(input);
     if(length < 3)
@@ -54,10 +54,10 @@ bool isValidWord(char* input, struct dictionary *myDict)
         if(strcmp(input, myDict->words[i]) == 0 && myDict->isFound[i] == false)
         {
             myDict->isFound[i] = true;
-            return true;
+            return i;
         }
     }
-    return false;
+    return 0;
 }
 int strLength(char* input)
 {

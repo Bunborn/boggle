@@ -20,7 +20,7 @@ void buildDictionary(struct dictionary *myDictionary);
 int countDictionaryWords(struct dictionary *myDictionary);
 void readDictionaryFile(struct dictionary *myDictionary);
 void freeDictionary(struct dictionary *myDictionary);
-bool isValidWord(char* input, struct dictionary *myDict);
+int findValidWord(char* input, struct dictionary *myDict);
 int strLength(char* input);
 
 #endif //BOGGLE_WORDS_H
