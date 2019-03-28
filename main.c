@@ -68,10 +68,12 @@ int main() {
     currentTime = clock();
     char* userInput;
     fflush(stdin);
+    bool guessedCorrect = false;
     while(timeElapsed<30.0)
     {
         userInput = readLine(stdin);
         printf("time elapsed = %lf\n", timeElapsed);
+        guessedCorrect = false;
         currentTime = clock();
         timeElapsed = (double)(currentTime - startTime)/CLOCKS_PER_SEC;
         if(strcmp(userInput,"1") == 0)
@@ -82,16 +84,21 @@ int main() {
             break;
         for(int i=0; i<currGame->numValidWords; i++)
         {
-            printf("3.i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
+            //printf("3.i = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
             if((strncmp(userInput,currGame->validWordList[i], 45) == 0))// && currGame->beenGuessed[i] == false)
             {
                 printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
-                currGame->beenGuessed[i] = true;
+                currGame->score = findPoints((userInput));
+                guessedCorrect = true;
+                //currGame->beenGuessed[i] = true; //crashing program
+                //printf("test");
                 break;
             }
         }
-        printf("%s is NOT a match.", userInput);
-
+        if(guessedCorrect == false)
+        {
+            printf("%s is NOT a match.", userInput);
+        }
 
     }
     printf("Game over! You scored a total of %d\n",currGame->score);

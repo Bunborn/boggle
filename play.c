@@ -71,7 +71,6 @@ int findPoints(char* string)
         points = 5;
     else if(stringLength >= 8)
         points = 11;
-    printf("%s is worth %d\n", string, points);
     return points;
 }
 void buildGame(struct game *currGame, struct dictionary *myDict)
