@@ -11,7 +11,9 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
     {
         for(int cols = 0; cols < gameBoard->cols; cols++)
         {
+            setVisitedFlagsFalse(gameBoard);
             search(gameBoard, myDict, currGame, rows, cols, string);
+            //printf("Checking index [%d,%d]\n", rows, cols);
         }
     }
     int counter = 0;
@@ -38,18 +40,17 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
     if(wordIndex>0)
     {
         myDict->isOnBoard[wordIndex] = true;
-        //currGame->validWordList[currGame->numValidWords] = string;
-        //printf("added %s into validwordlist at index %d\n", currGame->validWordList[currGame->numValidWords], currGame->numValidWords);
         currGame->numValidWords++;
         currGame->totalPossibleScore += findPoints(string);
-       // printf("%s is valid\n", string);
     }
     for(int i = rows - 1; i <= rows + 1 && i < gameBoard->rows; i++ ) //dfs in all 8 possible directions
     {
         for(int j = cols - 1; j <= cols+1 && j < gameBoard->cols; j++ )
         {
+            //printf("Checking index [%d,%d]\n", rows, cols);
             if(i>=0 && j>= 0 && gameBoard->isVisted[i][j] == false)
                 search(gameBoard, myDict, currGame, i, j, string);
+
         }
     }
 
@@ -86,7 +87,7 @@ void buildGame(struct game *currGame, struct dictionary *myDict)
 }
 void printScore(struct game *currGame)
 {
-    printf("Current user score is: %d\n", currGame->score);
+    printf("Player score is: %d\n", currGame->score);
 }
 void fillValidWords(struct game *currGame, struct dictionary *myDictionary)
 {
@@ -95,15 +96,26 @@ void fillValidWords(struct game *currGame, struct dictionary *myDictionary)
     {
         if(myDictionary->isOnBoard[i]==true)
         {
-            printf("this word is pretty dope: %s \n", myDictionary->words[i]);
             currGame->validWordList[counter] = myDictionary->words[i];
             counter++;
         }
-        //currGame->validWordList[i] = "aaaa";
-        //printf("\ni = %d\nword = %s\nnumValidWords = %d\n", i, currGame->validWordList[i], currGame->numValidWords);
-    } //debugging purposes
+    }
+}
+void setVisitedFlagsFalse(struct board *gameBoard)
+{
+    for(int i = 0; i < gameBoard->rows; i++)
+    {
+        for (int j = 0; j < gameBoard->cols; j++) {
+            gameBoard->isVisted[i][j] = false;
+        }
+    }
 }
 void freeGame(struct game *currGame)
 {
+    for ( int i = 0; i < currGame->numValidWords; i++ )
+    {
+        free(currGame->validWordList[i]);
+    }
+    free(currGame->validWordList);
     free(currGame);
 }

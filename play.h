@@ -26,6 +26,7 @@ void buildGame(struct game *currGame, struct dictionary *myDict);
 int findPoints(char* string);
 void printScore(struct game *currGame);
 void fillValidWords(struct game *currGame, struct dictionary *myDict);
+void setVisitedFlagsFalse(struct board *gameBoard);
 //print all possible words
 void freeGame(struct game *currGame);
 #endif //BOGGLE_PLAY_H
