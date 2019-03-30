@@ -16,7 +16,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
     gameBoard->rows = getValidInt();
     printf("Number of vertical letters: ");
     gameBoard->cols = getValidInt();
-    if(gameBoard->rows < 3 || gameBoard->cols < 3) //invalid board size
+    if(gameBoard->rows < 2 || gameBoard->cols < 2) //invalid board size
     {
         printf("This is not a valid board. (minimum 3x3)\n");
         getBoardInfo(gameBoard);

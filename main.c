@@ -42,18 +42,8 @@ int main() {
     currGame->totalPossibleScore = 0;
 
     struct board *gameBoard = malloc(sizeof(struct board));
-    getBoardInfo(gameBoard);
-    buildBoard(gameBoard);
-    fillBoard(gameBoard);
 
     menu(gameBoard, currGame, myDictionary);
-    printf("Time to boggle! Let's figure out our board size (minimum 3x3)\n");
-    printf("Game boards above 4x4 can lead to either poor rendering or long initial load time.\n");
-
-
-
-
-
 
 
 
@@ -64,6 +54,7 @@ int main() {
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict)
 {
     printf("Welcome to boggle!\n");
+
     //type 1 for single player
     //type 2 for 2 player
     //type 3 for boggle solver
@@ -73,7 +64,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
     while (1)
     {
         fflush((stdin));
-        printf("1 for sp, 2 for 2p, 3 for solver, 4 for rules, 5 to exit ");
+        printf("1 for sp, 2 for 2p, 3 for solver, 4 for rules, 5 to exit \n");
         char* response = readLine(stdin);
         if(strncmp(response, "1", 2) == 0)
         {
@@ -97,28 +88,40 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
 void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict)
 {
     printf("Welcome to the single player boggle challenge.\n");
-    printf("You will be using a board size of %d by %d with a total of %d letters to tango with.\n", gameBoard->cols, gameBoard->rows, gameBoard->cols * gameBoard->rows);
+    printf("Let's figure out our board size (minimum 2x2, standard 4x4)\n");
+    printf("Game boards above 4x4 can lead to either poor rendering or long initial load time.\n");
+    getBoardInfo(gameBoard);
+    buildBoard(gameBoard);
+    fillBoard(gameBoard);
+    printf("How long would you like to play for in seconds (180 is standard play)?");
+    int gameTime = getValidInt();
     printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to end early\n");
     printf("Loading...\n");
     findAllWords(gameBoard, myDict, currGame);
     fillValidWords(currGame, myDict);
+    printf("Finished loading. Hit enter to start Boggle single player.\n");
+    printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to end early\n");
+    fflush(stdin);
+    getchar();
     printBoard(gameBoard);
     //single player game
     currGame->score = 0;
     clock_t startTime, currentTime;
     double timeElapsed = 0.0;
     startTime = clock();
-    currentTime = clock();
     char* userInput;
     fflush(stdin);
     bool guessedCorrect = false;
-    while(timeElapsed<30.0)
+    while(timeElapsed<gameTime)
     {
         userInput = readLine(stdin);
-        printf("time elapsed = %lf\n", timeElapsed);
         guessedCorrect = false;
         currentTime = clock();
         timeElapsed = (double)(currentTime - startTime)/CLOCKS_PER_SEC;
+        if(timeElapsed > gameTime)
+        {
+            break;
+        }
         if(strcmp(userInput,"1") == 0)
             printBoard(gameBoard);
         if(strcmp(userInput,"2") == 0)
@@ -145,7 +148,15 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
 
     }
     printf("Game over! You scored a total of %d\n",currGame->score);
-    printf("The total possible score was %d.", currGame->totalPossibleScore);
+    printf("The total possible score was %d.\n", currGame->totalPossibleScore);
+    if(currGame->score == currGame->totalPossibleScore && currGame->numValidWords>0)
+    {
+        printf("Nice job! You guessed every possible word in the board\n");
+    }
+    printf("Hit enter to return to main menu");
+    fflush(stdin);
+    getchar();
+    menu(gameBoard, currGame, myDict);
 }
 void printRules()
 {
@@ -159,5 +170,7 @@ void printRules()
     printf("You will get more points for longer words as follows:\n");
     printf("3 Letters: 1 point\n4 Letters: 1 point\n5 Letters: 2 points\n6 Letters: 3 points\n7 Letters: 5 points\n8 or More Letters: 11 points\n");
     printf("-------------------------------\n");
-    //press any key to return to main menu
+    printf("Hit enter to return to main menu");
+    getchar();
+
 }
