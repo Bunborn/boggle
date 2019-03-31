@@ -41,15 +41,11 @@ void buildDictionary(struct dictionary *myDict)
         myDict->isFound[i] = false;
     }
 }
-bool couldBeValid(char* string, struct dictionary *myDict, int stringLength)
+bool couldBeValid(char* string, struct dictionary *myDict, int strLength)
 {
     for(int i=0; i<myDict->numWords; i++)
     {
-        int dictWordLen = strLength(string);
-        int smallest = dictWordLen;
-        if(stringLength<dictWordLen)
-            smallest = stringLength;
-        if(strncmp(string, myDict->words[i], (unsigned)smallest) == 0)
+        if(strncmp(string, myDict->words[i], strLength) == 0)
         {
             return true;
         }
