@@ -10,7 +10,7 @@ int col[] = { -1, 1, 0, -1, -1, 1, 0, 1 };
 
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame) //DFS algo to find all legal words on the board
 {
-    char string[512] = "";
+    char* path = malloc(sizeof(char) * 126);
     bool isFirstRun = true;
     setVisitedFlagsFalse(gameBoard);
     for(int i = 0; i < gameBoard->rows; i++)
@@ -19,8 +19,8 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
         {
             isFirstRun = true;
             printf("#");
-            string[0] = '\0';
-            search(gameBoard, myDict, currGame, i, j, isFirstRun, string);
+            path[0] = '\0';
+            search(gameBoard, myDict, currGame, i, j, isFirstRun, path);
         }
     }
 }
