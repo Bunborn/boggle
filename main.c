@@ -139,15 +139,16 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
             break;
         for(int i=0; i<currGame->numValidWords; i++)
         {
-            printf("validWord = %s\n", currGame->validWordList[i]);
-            if(currGame->beenGuessed[i] == true )
-            {
-                guessedCorrect = true; //did guess a correct word
-                printf("You've already used word %s, no points", userInput);
-                break;
-            }
+           // printf("validWord = %s\n", currGame->validWordList[i]);
+
             if((strncmp(userInput,currGame->validWordList[i], 45) == 0))
             {
+                if(currGame->beenGuessed[i] == true )
+                {
+                    guessedCorrect = true; //did guess a correct word
+                    printf("You've already used word %s, no points", userInput);
+                    break;
+                }
                 printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
                 currGame->score += findPoints((userInput));
                 currGame->beenGuessed[i] = true;
@@ -179,11 +180,12 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     printf("Hit enter to return to main menu");
     fflush(stdin);
     getchar();
-    freeBoard(gameBoard);
+    //freeBoard(gameBoard);
     if(currGame->score > currGame->highScore)
     {
         currGame->highScore = currGame->score;
     }
+    //freeBoard(gameBoard);
     menu(gameBoard, currGame, myDict);
 }
 void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict, int players)
@@ -280,7 +282,7 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
     printf("Hit enter to return to main menu");
     fflush(stdin);
     getchar();
-    freeBoard(gameBoard);
+    //freeBoard(gameBoard);
     menu(gameBoard, currGame, myDict);
 }
 void printRules()

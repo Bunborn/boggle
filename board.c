@@ -66,7 +66,6 @@ void printBoard(struct board *gameBoard)
     printf("\n");
     for(j=0; j< gameBoard->cols; j++)
     {
-        //sleep(1);
         printf("|");
         for(i=0; i< gameBoard->rows; i++)
         {
@@ -89,5 +88,6 @@ void freeBoard(struct board *gameBoard)
         free(gameBoard->cubes[i]);
     }
     free(gameBoard->cubes);
+    free(gameBoard);
 }
 

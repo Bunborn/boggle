@@ -28,7 +28,7 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
 void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, bool isFirstRun, char* path)
 {
     int pathLength = strLength(path);
-    if((pathLength == 0 && isFirstRun == false) || pathLength > 10)
+    if((pathLength == 0 && isFirstRun == false) || pathLength > 20)
     {
         return;
     }
@@ -37,21 +37,23 @@ void search(struct board *gameBoard, struct dictionary *myDict, struct game *cur
 
     path[pathLength] = tolower(gameBoard->cubes[i][j]);
     path[pathLength+1] = '\0';
-
-    printf("Path = %s\n", path);
-
-    int wordIndex = findValidWord(path, myDict); //sees if in dictionary and if so where
-    if(wordIndex>0)
+    bool possiblePath = couldBeValid(path, myDict, pathLength);
+    if(possiblePath) //if possibly in the dictionary, pursue this path
     {
-        printf("valid index at %d\n", wordIndex);
-        printf("%s is valid!\n", path);
-        myDict->isFound[wordIndex] = true;
-        currGame->numValidWords++;
-        currGame->totalPossibleScore += findPoints(path);
+        int wordIndex = findValidWord(path, myDict); //sees if in dictionary and if so where
+        if(wordIndex>0)
+        {
+            //printf("valid index at %d\n", wordIndex);
+            //printf("%s is valid!\n", path);
+            myDict->isFound[wordIndex] = true;
+            currGame->numValidWords++;
+            currGame->totalPossibleScore += findPoints(path);
+        }
     }
+
     for(int k = 0; k < 8; k++)
     {
-        if(isAllowed(i + row[k], j+col[k], gameBoard))
+        if((isAllowed(i + row[k], j+col[k], gameBoard)) && possiblePath == true) //if legal move and substring is legal
         {
             search(gameBoard, myDict, currGame, i + row[k], j + col[k], isFirstRun, path);
         }

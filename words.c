@@ -43,7 +43,17 @@ void buildDictionary(struct dictionary *myDict)
         myDict->isOnBoard[i] = false;
     }
 }
-
+bool couldBeValid(char* string, struct dictionary *myDict, int strLength)
+{
+    for(int i=0; i<myDict->numWords; i++)
+    {
+        if(strncmp(string, myDict->words[i], (unsigned)strLength) == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 int findValidWord(char* input, struct dictionary *myDict)
 {
     int length = strLength(input);
@@ -55,7 +65,7 @@ int findValidWord(char* input, struct dictionary *myDict)
     {
         if((strncmp(input, myDict->words[i], 50) == 0) && myDict->isFound[i] == false)
         {
-            //myDict->isFound[i] = true;
+            myDict->isFound[i] = true;
             return i;
         }
     }
