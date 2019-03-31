@@ -17,8 +17,9 @@ struct game
     int score;
     int numValidWords;
     int totalPossibleScore;
+    int highScore;
     char ** validWordList;
-    bool * beenGuessed;
+    int * beenGuessed;
 };
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame);
 void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, char* string);

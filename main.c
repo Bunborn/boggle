@@ -17,6 +17,7 @@
 //finish the "free" functions
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict); //prints menu and allows user to choose what to do
 void printRules(); //prints boggle rules
+void printBoggleArt();
 void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict);
 void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict, int players);
 
@@ -38,9 +39,6 @@ int main() {
 
     struct game *currGame = malloc(sizeof(struct game));
     buildGame(currGame, myDictionary);
-    currGame->numValidWords = 0;
-    currGame->score = 0;
-    currGame->totalPossibleScore = 0;
 
     struct board *gameBoard = malloc(sizeof(struct board));
 
@@ -54,7 +52,7 @@ int main() {
 }
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict)
 {
-    printf("Welcome to boggle!\n");
+    printBoggleArt();
 
     //type 1 for single player
     //type 2 for 2 player
@@ -65,7 +63,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
     while (1)
     {
         fflush((stdin));
-        printf("1 for sp, 2 for 2p, 3 for solver, 4 for rules, 5 to exit \n");
+        printf("1 for sp, 2 for 2p, 3 for solver, 4 for rules, 5 to see highscore, 6 to exit \n");
         char* response = readLine(stdin);
         if(strncmp(response, "1", 2) == 0)
         {
@@ -77,11 +75,19 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
             int playerNum = getValidInt();
             multiPlayerGame(gameBoard, currGame, myDict, playerNum);
         }
+        else if(strncmp(response, "3", 2) == 0)
+        {
+            printf("Prepare to enter your boggle board to solve");
+        }
         else if(strncmp(response, "4", 2) == 0)
         {
             printRules();
         }
         else if(strncmp(response, "5", 2) == 0)
+        {
+            printf("High score for this session: %d\n", currGame->highScore);
+        }
+        else if(strncmp(response, "6", 2) == 0)
         {
             printf("See you next time for more boggle'ing!");
             exit(0);
@@ -110,7 +116,6 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     fflush(stdin);
     getchar();
     printBoard(gameBoard);
-    //single player game
     currGame->score = 0;
     clock_t startTime, currentTime;
     double timeElapsed = 0.0;
@@ -128,18 +133,19 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
         {
             break;
         }
-        if(strcmp(userInput,"1") == 0)
+        if(strncmp(userInput,"1",2) == 0)
             printBoard(gameBoard);
-        if(strcmp(userInput,"2") == 0)
+        if(strncmp(userInput,"2",2) == 0)
             printScore(currGame);
-        if(strcmp(userInput,"3") == 0)
+        if(strncmp(userInput,"3",2) == 0)
             break;
         for(int i=0; i<currGame->numValidWords; i++)
         {
-            if((strncmp(userInput,currGame->validWordList[i], 45) == 0))// && currGame->beenGuessed[i] == false)
+            if((strncmp(userInput,currGame->validWordList[i], 45) == 0) && currGame->beenGuessed[i] == false)
             {
                 printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
                 currGame->score += findPoints((userInput));
+                currGame->beenGuessed[i] = true;
                 guessedCorrect = true;
                 break;
             }
@@ -160,6 +166,10 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     fflush(stdin);
     freeBoard(gameBoard);
     getchar();
+    if(currGame->score > currGame->highScore)
+    {
+        currGame->highScore = currGame->score;
+    }
     menu(gameBoard, currGame, myDict);
 }
 void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict, int players)
@@ -206,11 +216,11 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
             {
                 break;
             }
-            if(strcmp(userInput,"1") == 0)
+            if(strncmp(userInput,"1",2) == 0)
                 printBoard(gameBoard);
-            if(strcmp(userInput,"2") == 0)
+            if(strncmp(userInput,"2",2) == 0)
                 printScore(currGame);
-            if(strcmp(userInput,"3") == 0)
+            if(strncmp(userInput,"3",2) == 0)
                 break;
             for(int i=0; i<currGame->numValidWords; i++)
             {
@@ -234,8 +244,17 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
         {
             printf("Nice job! You guessed every possible word in the board\n");
         }
+        if(currGame->score > currGame->highScore)
+        {
+            currGame->highScore = currGame->score;
+        }
     }
-
+    printf("Our total scores for each player:\n");
+    //int winningScore = 0;
+    for(int i=1; i<players+1; i++) //1 based indexing
+    {
+        printf("Player %d: %d\n", i, playerScore[i]);
+    }
     printf("Hit enter to return to main menu");
     fflush(stdin);
     getchar();
@@ -256,5 +275,20 @@ void printRules()
     printf("-------------------------------\n");
     printf("Hit enter to return to main menu");
     getchar();
-
+}
+void printBoggleArt()
+{
+    printf(".__ .__..__ .__ .   .___\n");
+    printf("[__)|  |[ __[ __|   [__ \n");
+    printf("[__)|__|[_./[_./|___[___\n\n");
+    /*printf("    _  _  _  _             _  _  _  _            _  _  _              _  _  _           _                    _  _  _  _  _    \n");
+    printf("   (_)(_)(_)(_) _        _(_)(_)(_)(_)_       _ (_)(_)(_) _        _ (_)(_)(_) _       (_)                  (_)(_)(_)(_)(_)   \n");
+    printf("    (_)        (_)      (_)          (_)     (_)         (_)      (_)         (_)      (_)                  (_)               \n");
+    printf("    (_) _  _  _(_)      (_)          (_)     (_)    _  _  _       (_)    _  _  _       (_)                  (_) _  _          \n");
+    printf("    (_)(_)(_)(_)_       (_)          (_)     (_)   (_)(_)(_)      (_)   (_)(_)(_)      (_)                  (_)(_)(_)         \n");
+    printf("    (_)        (_)      (_)          (_)     (_)         (_)      (_)         (_)      (_)                  (_)               \n");
+    printf("    (_)_  _  _ (_)      (_)_  _  _  _(_)     (_) _  _  _ (_)      (_) _  _  _ (_)      (_) _  _  _  _       (_) _  _  _  _    \n");
+    printf("   (_)(_)(_)(_)           (_)(_)(_)(_)          (_)(_)(_)(_)         (_)(_)(_)(_)      (_)(_)(_)(_)(_)      (_)(_)(_)(_)(_)   \n");
+    printf("\n\n");
+     */
 }
