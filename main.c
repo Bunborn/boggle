@@ -8,9 +8,6 @@
 #include "words.h"
 #include "play.h"
 
-//TODO: make the scanner.c readInt use the readline! customer timer could be nice. loading bar??
-//fix freeBoard
-
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict); //prints menu and allows user to choose what to do
 void printRules(); //prints boggle rules
 void printBoggleArt();
@@ -309,13 +306,13 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
             isOneWinner = false;
         }
     }
-    if(isOneWinner == false)
-    {
-        printf("Draw! No one gets a win\n");
-    }
-    else if (winningPlayer==0)
+    if (winningPlayer==0)
     {
         printf("No one got any points! No winner\n");
+    }
+    else if(isOneWinner == false)
+    {
+        printf("Draw! No one gets a win\n");
     }
     else
     {
@@ -334,6 +331,7 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
         }
     }
     bool toMenu = false;
+    fflush(stdin);
     while(toMenu == false)
     {
         printf("Enter 1 to replay multi player with same number of players, 2 to see current score of players,\nor anything else to go back to exit multiplayer and return to menu");
