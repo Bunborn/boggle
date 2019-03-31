@@ -23,7 +23,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
     }
     if(gameBoard->rows > 8 || gameBoard->cols > 8)
     {
-        printf("WARNING: Large game boards can lead to poor rendering and long load times.");
+        printf("WARNING: Large game board detected. Longer than normal load time and possible screen rendering issues.\n");
     }
 }
 void fillBoard(struct board *gameBoard)

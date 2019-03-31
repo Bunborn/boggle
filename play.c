@@ -94,6 +94,10 @@ void buildGame(struct game *currGame, struct dictionary *myDict)
 void printScore(struct game *currGame)
 {
     printf("Player score is: %d\n", currGame->score);
+    if(currGame->score==0)
+    {
+        printf("Go get some points!\n");
+    }
 }
 void fillValidWords(struct game *currGame, struct dictionary *myDictionary)
 {
