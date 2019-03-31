@@ -27,9 +27,9 @@ int main() {
         exit(0);
     }
     struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
-    buildDictionary(myDictionary);
     myDictionary->dictionaryPtr = fptr;
-    countDictionaryWords(myDictionary);
+    countDictionaryWords(myDictionary);    
+    buildDictionary(myDictionary);
     readDictionaryFile(myDictionary);
 
     struct game *currGame = malloc(sizeof(struct game));
