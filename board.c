@@ -33,18 +33,18 @@ void fillBoard(struct board *gameBoard)
         for(int rows=0; rows < gameBoard->rows; rows++)
         {
             gameBoard->cubes[cols][rows] = makeRandomCharacter();
-            gameBoard->isVisted[cols][rows] = false;
+            gameBoard->isVisited[cols][rows] = false;
         }
     }
 }
 void buildBoard(struct board *gameBoard)
 {
     gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
-    gameBoard->isVisted = (bool**) calloc(gameBoard->rows, sizeof(bool*));
+    gameBoard->isVisited = (bool**) calloc(gameBoard->rows, sizeof(bool*));
     for ( int i = 0; i < gameBoard->rows; i++ )
     {
         gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
-        gameBoard->isVisted[i] = (bool*) calloc(gameBoard->cols, sizeof(bool));
+        gameBoard->isVisited[i] = (bool*) calloc(gameBoard->cols, sizeof(bool));
     }
 }
 char makeRandomCharacter()
