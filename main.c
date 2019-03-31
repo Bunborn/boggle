@@ -57,7 +57,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         else if(strncmp(response, "2", 2) == 0)
         {
             resetMultiPlayerGame(currGame);
-            printf("How many players (2-10)?");
+            printf("How many players (2-10)\n?");
             int playerNum = getValidInt();
             while(playerNum < 2 || playerNum > 10)
             {
@@ -80,7 +80,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         }
         else if(strncmp(response, "6", 2) == 0)
         {
-            printf("See you next time for more boggle'ing!");
+            printf("See you next time for more boggle'ing!\n");
             freeBoard(gameBoard);
             freeDictionary(myDict);
             freeGame(currGame);
@@ -149,7 +149,7 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
                     if(currGame->beenGuessed[wordNum] == true )
                     {
                         guessedCorrect = true; //did guess a correct word
-                        printf("You've already used word %s, no points", userInput);
+                        printf("You've already used word %s, no points\n", userInput);
                         break;
                     }
                     int points = findPoints(userInput);
