@@ -13,7 +13,6 @@ struct dictionary
     int numWords;
     FILE *dictionaryPtr;
     int* isFound;
-    int* isOnBoard;
     char** words;
 };
 

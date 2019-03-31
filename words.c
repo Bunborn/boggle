@@ -34,13 +34,11 @@ void readDictionaryFile(struct dictionary *myDictionary)
 void buildDictionary(struct dictionary *myDict)
 {
     myDict->isFound = malloc(sizeof(int) * myDict->numWords);
-    myDict->isOnBoard = malloc(sizeof(int) * myDict->numWords);
     myDict->words = (char**) calloc((unsigned)myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
         myDict->words[i] = (char*) calloc(40, sizeof(char));
         myDict->isFound[i] = false;
-        myDict->isOnBoard[i] = false;
     }
 }
 bool couldBeValid(char* string, struct dictionary *myDict, int strLength)

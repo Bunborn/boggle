@@ -82,6 +82,7 @@ int findPoints(char* string)
 void buildGame(struct game *currGame, struct dictionary *myDict)
 {
     currGame->beenGuessed = malloc(sizeof(int) * myDict->numWords);
+    currGame->multiPlayerScore = malloc(sizeof(int) * 10);
     currGame->validWordList = (char**) calloc((unsigned)myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
@@ -130,6 +131,13 @@ void resetGame(struct game * currGame)
     currGame->score = 0;
     currGame->totalPossibleScore = 0;
 }
+void resetMultiPlayerGame(struct game * currGame)
+{
+    for(int i=0; i< 10; i++)
+    {
+        currGame->multiPlayerScore[i] = 0;
+    }
+}
 void freeGame(struct game *currGame)
 {
     for ( int i = 0; i < currGame->numValidWords; i++ )
@@ -138,6 +146,7 @@ void freeGame(struct game *currGame)
     }
     free(currGame->beenGuessed);
     free(currGame->validWordList);
+    free(currGame->multiPlayerScore);
     free(currGame);
 }
 

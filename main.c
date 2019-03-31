@@ -9,8 +9,7 @@
 #include "play.h"
 
 //TODO: make the scanner.c readInt use the readline! customer timer could be nice. loading bar??
-//fix DFS
-//fix the guessing same word twice
+//fix freeBoard
 
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict); //prints menu and allows user to choose what to do
 void printRules(); //prints boggle rules
@@ -18,6 +17,7 @@ void printBoggleArt();
 void printLoadingBar(struct board * gameBoard);
 void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict);
 void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict, int players);
+void boggleSolver(struct board * gameBoard, struct game * currGame, struct dictionary * myDict);
 
 
 int main() {
@@ -51,7 +51,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
     printBoggleArt();
     while (1)
     {
-        printf("1 for single-player, 2 for multi-player, 3 for solver, 4 to see rules, 5 to see this session's highscore, 6 to exit program \n");
+        printf("1 for single-player, 2 for multi-player, 3 for solver,\n4 to see rules, 5 to see this session's highscore, 6 to exit program \n");
         char* response = readLine(stdin);
         if(strncmp(response, "1", 2) == 0)
         {
@@ -59,13 +59,19 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         }
         else if(strncmp(response, "2", 2) == 0)
         {
-            printf("How many players?");
+            resetMultiPlayerGame(currGame);
+            printf("How many players (2-10)?");
             int playerNum = getValidInt();
+            while(playerNum < 2 || playerNum > 10)
+            {
+                printf("Invalid input\n");
+                playerNum = getValidInt();
+            }
             multiPlayerGame(gameBoard, currGame, myDict, playerNum);
         }
         else if(strncmp(response, "3", 2) == 0)
         {
-            printf("Prepare to enter your boggle board to solve");
+            boggleSolver(gameBoard,currGame,myDict);
         }
         else if(strncmp(response, "4", 2) == 0)
         {
@@ -206,8 +212,10 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
     int gameTime = getValidInt();
     printf("Enter \'1\' to re-print the board, \'2\' to print current score, \'3\' to view time left, \'4\' to end early.\n");
     printf("Loading...\n");
+    printLoadingBar(gameBoard);
     findAllWords(gameBoard, myDict, currGame);
     fillValidWords(currGame, myDict);
+    printf("]\n");
     int playerScore[players];
     for(int currPlayerNum = 1; currPlayerNum < players+1; currPlayerNum++) //1 based indexed
     {
@@ -245,20 +253,20 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
                 break;
             else
             {
-                for(int i=0; i<currGame->numValidWords; i++)
+                for(int wordNum=0; wordNum<currGame->numValidWords; wordNum++)
                 {
-                    if(currGame->beenGuessed[i] == true )
+                    if((strncmp(userInput,currGame->validWordList[wordNum], 50) == 0))
                     {
-                        guessedCorrect = true; //did guess a correct word
-                        printf("You've already used word %s, no points", userInput);
-                        break;
-                    }
-                    if((strncmp(userInput,currGame->validWordList[i], 50) == 0))
-                    {
+                        if(currGame->beenGuessed[wordNum] == true )
+                        {
+                            guessedCorrect = true; //did guess a correct word
+                            printf("You've already used word %s, no points", userInput);
+                            break;
+                        }
                         int points = findPoints(userInput);
                         printf("%s is a match! You receive %d points", userInput, points);
                         currGame->score += points;
-                        currGame->beenGuessed[i] = true;
+                        currGame->beenGuessed[wordNum] = true;
                         guessedCorrect = true;
                         break;
                     }
@@ -282,17 +290,113 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
         }
     }
     printf("Our total scores for each player:\n");
+    int maxScore = 0;
+    int winningPlayer = 0;
     for(int i=1; i<players+1; i++) //1 based indexing
     {
         printf("Player %d: %d\n", i, playerScore[i]);
+        if(playerScore[i] > maxScore)
+        {
+            maxScore = playerScore[i];
+            winningPlayer = i;
+        }
     }
-
-    printf("Enter 1 to replay multi player with same number of people or anything else to go back to menu");
-    char* buffer = readLine(stdin);
-    if(strncmp(buffer,"1",2) == 0)
-        multiPlayerGame(gameBoard, currGame, myDict, players);
+    bool isOneWinner = true;
+    for(int i=1; i<players+1; i++) //1 based indexing
+    {
+        if(playerScore[i] == maxScore && i != winningPlayer) //tie for top score
+        {
+            isOneWinner = false;
+        }
+    }
+    if(isOneWinner == false)
+    {
+        printf("Draw! No one gets a win\n");
+    }
+    else if (winningPlayer==0)
+    {
+        printf("No one got any points! No winner\n");
+    }
     else
-        menu(gameBoard, currGame, myDict);
+    {
+        printf("Player %d wins!\n", winningPlayer);
+        currGame->multiPlayerScore[winningPlayer]++;
+    }
+    if(currGame->numValidWords>0)
+    {
+        if(currGame->score == currGame->totalPossibleScore)
+            printf("Nice job! You guessed every possible word in the board\n");
+        printf("Hit enter to see all valid words\n");
+        readLine(stdin);
+        for(int i =0; i<currGame->numValidWords; i++)
+        {
+            printf("Word %d: %s\n", i+1, currGame->validWordList[i]);
+        }
+    }
+    bool toMenu = false;
+    while(toMenu == false)
+    {
+        printf("Enter 1 to replay multi player with same number of players, 2 to see current score of players,\nor anything else to go back to exit multiplayer and return to menu");
+        char* buffer = readLine(stdin);
+        if(strncmp(buffer,"1",2) == 0)
+            multiPlayerGame(gameBoard, currGame, myDict, players);
+        else if(strncmp(buffer,"2",2) == 0)
+        {
+            for(int i=1; i<=players; i++)
+            {
+                printf("Number of wins for player %d: %d\n", i, currGame->multiPlayerScore[i]);
+            }
+        }
+        else
+            toMenu = true;
+    }
+    menu(gameBoard, currGame, myDict);
+
+}
+void boggleSolver(struct board * gameBoard, struct game * currGame, struct dictionary * myDict)
+{
+    resetGame(currGame);
+    for(int i =0; i<myDict->numWords; i++)
+    {
+        myDict->isFound[i] = false;
+    }
+    printf("Welcome to the boggle solver.\n");
+    printf("Input your boggle board and we will find all the words possible that are also in your dictionary file\n");
+    printf("What is the board size you want to solve?\n");
+    getBoardInfo(gameBoard);
+    buildBoard(gameBoard);
+    char* buffer;
+    char letter;
+    for(int row = 0; row < gameBoard->rows; row++)
+    {
+        for(int col=0; col < gameBoard->cols; col++)
+        {
+            printf("What is the letter in row %d, col %d?", row, col);
+            buffer = readLine(stdin);
+            letter = buffer[0];
+            gameBoard->cubes[row][col] = letter;
+        }
+    }
+    printf("Loading...\n");
+    printLoadingBar(gameBoard);
+    findAllWords(gameBoard, myDict, currGame);
+    fillValidWords(currGame, myDict);
+    printf("]\nFinished loading all answers for the following boggle board:\n");
+    printBoard(gameBoard);
+    printf("The total possible SCORE was %d with %d words.\n", currGame->totalPossibleScore, currGame->numValidWords);
+    if(currGame->numValidWords>0)
+    {
+        printf("Hit enter to see all valid words\n");
+        readLine(stdin);
+        for(int i =0; i<currGame->numValidWords; i++)
+        {
+            printf("Word %d: %s\n", i+1, currGame->validWordList[i]);
+        }
+    }
+    else
+    {
+        printf("No valid words in this board\n");
+    }
 }
 void printLoadingBar(struct board * gameBoard)
 {

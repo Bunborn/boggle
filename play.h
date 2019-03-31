@@ -20,6 +20,7 @@ struct game
     int highScore;
     char ** validWordList;
     int * beenGuessed;
+    int * multiPlayerScore;
 };
 
 
@@ -32,6 +33,7 @@ void printScore(struct game *currGame);
 void fillValidWords(struct game *currGame, struct dictionary *myDict);
 void setVisitedFlagsFalse(struct board *gameBoard);
 void resetGame(struct game * currGame);
+void resetMultiPlayerGame(struct game * currGame);
 bool isAllowed(int row, int col, struct board *gameBoard);
 
 void freeGame(struct game *currGame);

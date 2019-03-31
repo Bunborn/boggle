@@ -83,11 +83,8 @@ void printBoard(struct board *gameBoard)
 
 void freeBoard(struct board *gameBoard)
 {
-    for ( int i = 0; i < gameBoard->rows; i++ )
-    {
-        free(gameBoard->cubes[i]);
-    }
     free(gameBoard->cubes);
+    free(gameBoard->isVisited);
     free(gameBoard);
 }
 
