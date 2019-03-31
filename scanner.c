@@ -73,9 +73,10 @@ readInt(FILE *fp)
     }
     if (result == 0)
     {
-        fprintf(stderr,"SCAN ERROR: attempt to read an integer failed\n");
-        fprintf(stderr,"offending character was <%c>\n",fgetc(fp));
-        exit(1);
+        printf("Invalid input");
+        //fprintf(stderr,"SCAN ERROR: attempt to read an integer failed\n");
+        //fprintf(stderr,"offending character was <%c>\n",fgetc(fp));
+        //exit(1);
     }
     return x;
 }
@@ -300,24 +301,13 @@ stringPending(FILE *fp)
 
 int getValidInt()
 {
-    char inputString[512];
-    scanf("%s",inputString);
+    char* inputString = readLine(stdin);
 
-    char *ptr;
     long inputNum;
 
-    inputNum = strtol(inputString, &ptr, 10);
+    inputNum = strtol(inputString, &inputString, 10);
     return (int)inputNum;
 }
-char getValidChar()
-{
-    char inputString[512];
-    scanf("%s",inputString);
-
-    char inputChar = inputString[0];
-    return inputChar;
-}
-
 /********** private functions **********************/
 
 static void

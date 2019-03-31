@@ -18,7 +18,7 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
         for(int j=0; j<gameBoard->rows; j++)
         {
             isFirstRun = true;
-            printf("[i,j] = [%d,%d]\n", i, j);
+            printf("#");
             string[0] = '\0';
             search(gameBoard, myDict, currGame, i, j, isFirstRun, string);
         }
@@ -88,10 +88,8 @@ void buildGame(struct game *currGame, struct dictionary *myDict)
         currGame->validWordList[i] = (char*) calloc(40, sizeof(char));
         currGame->beenGuessed[i] = false;
     }
-    currGame->numValidWords = 0;
-    currGame->score = 0;
-    currGame->totalPossibleScore = 0;
     currGame->highScore = 0;
+    resetGame(currGame);
 }
 void printScore(struct game *currGame)
 {
@@ -121,6 +119,12 @@ void setVisitedFlagsFalse(struct board *gameBoard)
             gameBoard->isVisited[i][j] = false;
         }
     }
+}
+void resetGame(struct game * currGame)
+{
+    currGame->numValidWords = 0;
+    currGame->score = 0;
+    currGame->totalPossibleScore = 0;
 }
 void freeGame(struct game *currGame)
 {

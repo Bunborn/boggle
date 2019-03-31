@@ -21,7 +21,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
         printf("This is not a valid board. (minimum 2x2)\n");
         getBoardInfo(gameBoard);
     }
-    if(gameBoard->rows > 10 || gameBoard->cols > 10)
+    if(gameBoard->rows > 8 || gameBoard->cols > 8)
     {
         printf("WARNING: Large game boards can lead to poor rendering and long load times.");
     }
