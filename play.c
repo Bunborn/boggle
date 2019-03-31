@@ -127,6 +127,7 @@ void freeGame(struct game *currGame)
     {
         free(currGame->validWordList[i]);
     }
+    free(currGame->beenGuessed);
     free(currGame->validWordList);
     free(currGame);
 }

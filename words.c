@@ -53,7 +53,7 @@ int findValidWord(char* input, struct dictionary *myDict)
     }
     for(int i=0; i<myDict->numWords; i++)
     {
-        if(strcmp(input, myDict->words[i]) == 0 && myDict->isFound[i] == false)
+        if(strncmp(input, myDict->words[i], length) == 0 && myDict->isFound[i] == false)
         {
             myDict->isFound[i] = true;
             return i;
@@ -77,4 +77,5 @@ void freeDictionary(struct dictionary *myDict)
         free(myDict->words[i]);
     }
     free(myDict->words);
+    free(myDict);
 }

@@ -9,12 +9,8 @@
 #include "play.h"
 
 //TODO: make the scanner.c readInt use the readline! customer timer could be nice. loading bar??
-//strcmp to strncmp's
-//fix the isVisted flag
-//find out why bool isFound isn't working
-//flesh out menu
-//2 player game mode
-//finish the "free" functions
+//fix DFS
+
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict); //prints menu and allows user to choose what to do
 void printRules(); //prints boggle rules
 void printBoggleArt();
@@ -42,9 +38,7 @@ int main() {
 
     struct board *gameBoard = malloc(sizeof(struct board));
 
-    menu(gameBoard, currGame, myDictionary);
-
-
+    menu(gameBoard, currGame, myDictionary); //prints game menu
 
     freeBoard(gameBoard);
     freeDictionary(myDictionary);
@@ -90,6 +84,9 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         else if(strncmp(response, "6", 2) == 0)
         {
             printf("See you next time for more boggle'ing!");
+            freeBoard(gameBoard);
+            freeDictionary(myDict);
+            freeGame(currGame);
             exit(0);
         }
         else
@@ -281,14 +278,4 @@ void printBoggleArt()
     printf(".__ .__..__ .__ .   .___\n");
     printf("[__)|  |[ __[ __|   [__ \n");
     printf("[__)|__|[_./[_./|___[___\n\n");
-    /*printf("    _  _  _  _             _  _  _  _            _  _  _              _  _  _           _                    _  _  _  _  _    \n");
-    printf("   (_)(_)(_)(_) _        _(_)(_)(_)(_)_       _ (_)(_)(_) _        _ (_)(_)(_) _       (_)                  (_)(_)(_)(_)(_)   \n");
-    printf("    (_)        (_)      (_)          (_)     (_)         (_)      (_)         (_)      (_)                  (_)               \n");
-    printf("    (_) _  _  _(_)      (_)          (_)     (_)    _  _  _       (_)    _  _  _       (_)                  (_) _  _          \n");
-    printf("    (_)(_)(_)(_)_       (_)          (_)     (_)   (_)(_)(_)      (_)   (_)(_)(_)      (_)                  (_)(_)(_)         \n");
-    printf("    (_)        (_)      (_)          (_)     (_)         (_)      (_)         (_)      (_)                  (_)               \n");
-    printf("    (_)_  _  _ (_)      (_)_  _  _  _(_)     (_) _  _  _ (_)      (_) _  _  _ (_)      (_) _  _  _  _       (_) _  _  _  _    \n");
-    printf("   (_)(_)(_)(_)           (_)(_)(_)(_)          (_)(_)(_)(_)         (_)(_)(_)(_)      (_)(_)(_)(_)(_)      (_)(_)(_)(_)(_)   \n");
-    printf("\n\n");
-     */
 }
