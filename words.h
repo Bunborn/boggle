@@ -12,8 +12,8 @@ struct dictionary
 {
     int numWords;
     FILE *dictionaryPtr;
-    bool* isFound;
-    bool* isOnBoard;
+    int* isFound;
+    int* isOnBoard;
     char** words;
 };
 

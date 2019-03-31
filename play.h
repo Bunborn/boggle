@@ -21,13 +21,17 @@ struct game
     char ** validWordList;
     int * beenGuessed;
 };
+
+
+
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame);
-void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, char* string);
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, bool isFirstRun, char* path);
 void buildGame(struct game *currGame, struct dictionary *myDict);
 int findPoints(char* string);
 void printScore(struct game *currGame);
 void fillValidWords(struct game *currGame, struct dictionary *myDict);
 void setVisitedFlagsFalse(struct board *gameBoard);
-//print all possible words
+bool isAllowed(int row, int col, struct board *gameBoard);
+
 void freeGame(struct game *currGame);
 #endif //BOGGLE_PLAY_H

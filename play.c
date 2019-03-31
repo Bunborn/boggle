@@ -4,66 +4,61 @@
 
 #include "play.h"
 
+// All possible movements for DFS
+int row[] = { -1, -1, -1, 0, 1, 0, 1, 1 };
+int col[] = { -1, 1, 0, -1, -1, 1, 0, 1 };
+
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame) //DFS algo to find all legal words on the board
 {
-    //char string[25] = "";
+    char string[512] = "";
+    bool isFirstRun = true;
     setVisitedFlagsFalse(gameBoard);
     for(int i = 0; i < gameBoard->rows; i++)
     {
-        for(int j = 0; j < gameBoard->cols; j++)
+        for(int j=0; j<gameBoard->rows; j++)
         {
-            char string[512] = "";
-            //setVisitedFlagsFalse(gameBoard);
-            //string[0] = tolower(gameBoard->cubes[i][j]);
-            //string[1] = '\0';
-            printf(" inspecting letter cube %c at [%d][%d]\n", gameBoard->cubes[i][j], i, j);
-            search(gameBoard, myDict, currGame, i, j, string);
-            //printf("FINDALLWORDS, Checking index [%d,%d]\n", row, cols);
-
-        }
-        printf("\n");
-    }
-    int counter = 0;
-    for(int i=0; i<myDict->numWords;i++)
-    {
-        if(myDict->isOnBoard[i] == true)
-        {
-            currGame->validWordList[i] = myDict->words[i];
-            printf("added %s into valid word list\n", currGame->validWordList[i]);
-            counter++;
+            isFirstRun = true;
+            printf("[i,j] = [%d,%d]\n", i, j);
+            string[0] = '\0';
+            search(gameBoard, myDict, currGame, i, j, isFirstRun, string);
         }
     }
 }
 
-void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, char* string)
-{ //gets passed in a gameboard with all spots as not visited and [i][j] index for a letter cube along with empty string
-
-    int stringLength = strLength(string);
-    gameBoard->isVisted[i][j] = true;
-
-    string[stringLength] = tolower(gameBoard->cubes[i][j]);
-    string[stringLength+1] = '\0';
-
-    int wordIndex = findValidWord(string, myDict); //sees if in dictionary and if so where
-    //printf("string = %s\n", string); //debug, prints stack
-    if(wordIndex>0) //you can ignore this, this is for me to build a list of real words on the board
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, bool isFirstRun, char* path)
+{
+    int pathLength = strLength(path);
+    if((pathLength == 0 && isFirstRun == false) || pathLength > 10)
     {
-        myDict->isOnBoard[wordIndex] = true;
-        currGame->numValidWords++;
-        currGame->totalPossibleScore += findPoints(string);
+        return;
     }
-    for(int row = i - 1; row <= i + 1 && row < gameBoard->rows; row++ ) //dfs in all 8 possible directions
+    gameBoard->isVisited[i][j] = true;
+    isFirstRun = false;
+
+    path[pathLength] = tolower(gameBoard->cubes[i][j]);
+    path[pathLength+1] = '\0';
+
+    printf("Path = %s\n", path);
+
+    int wordIndex = findValidWord(path, myDict); //sees if in dictionary and if so where
+    if(wordIndex>0)
     {
-        for(int col = j - 1; col <= j + 1 && col < gameBoard->cols; col++ )
+        printf("valid index at %d\n", wordIndex);
+        printf("%s is valid!\n", path);
+        myDict->isFound[wordIndex] = true;
+        currGame->numValidWords++;
+        currGame->totalPossibleScore += findPoints(path);
+    }
+    for(int k = 0; k < 8; k++)
+    {
+        if(isAllowed(i + row[k], j+col[k], gameBoard))
         {
-            if(row>=0 && col>= 0 && gameBoard->isVisted[col][row] == false)
-            {
-                search(gameBoard, myDict, currGame, col, row, string);
-            }
+            search(gameBoard, myDict, currGame, i + row[k], j + col[k], isFirstRun, path);
         }
     }
-    string[stringLength-1] = '\0';
-    gameBoard->isVisted[i][j] = false;
+    pathLength = strLength(path);
+    path[pathLength-1] = '\0';
+    gameBoard->isVisited[i][j] = false;
 }
 
 int findPoints(char* string)
@@ -89,7 +84,7 @@ void buildGame(struct game *currGame, struct dictionary *myDict)
     for ( int i = 0; i < myDict->numWords; i++ )
     {
         currGame->validWordList[i] = (char*) calloc(40, sizeof(char));
-        currGame->beenGuessed = false;
+        currGame->beenGuessed[i] = false;
     }
     currGame->numValidWords = 0;
     currGame->score = 0;
@@ -105,19 +100,23 @@ void fillValidWords(struct game *currGame, struct dictionary *myDictionary)
     int counter=0;
     for(int i=0; i<myDictionary->numWords; i++)
     {
-        if(myDictionary->isOnBoard[i]==true)
+        if(myDictionary->isFound[i]==true)
         {
             currGame->validWordList[counter] = myDictionary->words[i];
             counter++;
         }
     }
 }
+bool isAllowed(int row, int col, struct board *gameBoard)
+{
+    return ((row>= 0 && row < gameBoard->rows) && (col >= 0 && col < gameBoard->cols) && gameBoard->isVisited[row][col] == false);
+}
 void setVisitedFlagsFalse(struct board *gameBoard)
 {
     for(int i = 0; i < gameBoard->rows; i++)
     {
         for (int j = 0; j < gameBoard->cols; j++) {
-            gameBoard->isVisted[i][j] = false;
+            gameBoard->isVisited[i][j] = false;
         }
     }
 }
@@ -131,3 +130,4 @@ void freeGame(struct game *currGame)
     free(currGame->validWordList);
     free(currGame);
 }
+

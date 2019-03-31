@@ -10,7 +10,7 @@ struct board
     unsigned int rows;
     unsigned int cols;
     char** cubes;
-    bool** isVisited;
+    int** isVisited;
 };
 
 void printBoard(struct board *gameBoard);

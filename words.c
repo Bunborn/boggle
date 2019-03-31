@@ -33,8 +33,8 @@ void readDictionaryFile(struct dictionary *myDictionary)
 }
 void buildDictionary(struct dictionary *myDict)
 {
-    myDict->isFound = malloc(sizeof(bool) * myDict->numWords);
-    myDict->isOnBoard = malloc(sizeof(bool) * myDict->numWords);
+    myDict->isFound = malloc(sizeof(int) * myDict->numWords);
+    myDict->isOnBoard = malloc(sizeof(int) * myDict->numWords);
     myDict->words = (char**) calloc((unsigned)myDict->numWords, sizeof(char*));
     for ( int i = 0; i < myDict->numWords; i++ )
     {
@@ -53,9 +53,9 @@ int findValidWord(char* input, struct dictionary *myDict)
     }
     for(int i=0; i<myDict->numWords; i++)
     {
-        if(strncmp(input, myDict->words[i], length) == 0 && myDict->isFound[i] == false)
+        if((strncmp(input, myDict->words[i], 50) == 0) && myDict->isFound[i] == false)
         {
-            myDict->isFound[i] = true;
+            //myDict->isFound[i] = true;
             return i;
         }
     }

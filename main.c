@@ -10,6 +10,7 @@
 
 //TODO: make the scanner.c readInt use the readline! customer timer could be nice. loading bar??
 //fix DFS
+//fix the guessing same word twice
 
 void menu(struct board * gameBoard, struct game * currGame, struct dictionary * myDict); //prints menu and allows user to choose what to do
 void printRules(); //prints boggle rules
@@ -57,7 +58,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
     while (1)
     {
         fflush((stdin));
-        printf("1 for sp, 2 for 2p, 3 for solver, 4 for rules, 5 to see highscore, 6 to exit \n");
+        printf("1 for single-player, 2 for multi-player, 3 for solver, 4 for rules, 5 to see highscore, 6 to exit \n");
         char* response = readLine(stdin);
         if(strncmp(response, "1", 2) == 0)
         {
@@ -111,7 +112,7 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     fillValidWords(currGame, myDict);
     printf("Finished loading. Hit enter to start Boggle single player.\n");
     fflush(stdin);
-    getchar();
+    readLine(stdin);
     printBoard(gameBoard);
     currGame->score = 0;
     clock_t startTime, currentTime;
@@ -138,7 +139,14 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
             break;
         for(int i=0; i<currGame->numValidWords; i++)
         {
-            if((strncmp(userInput,currGame->validWordList[i], 45) == 0) && currGame->beenGuessed[i] == false)
+            printf("validWord = %s\n", currGame->validWordList[i]);
+            if(currGame->beenGuessed[i] == true )
+            {
+                guessedCorrect = true; //did guess a correct word
+                printf("You've already used word %s, no points", userInput);
+                break;
+            }
+            if((strncmp(userInput,currGame->validWordList[i], 45) == 0))
             {
                 printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
                 currGame->score += findPoints((userInput));
@@ -155,14 +163,23 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     }
     printf("Game over! You scored a total of %d\n",currGame->score);
     printf("The total possible score was %d.\n", currGame->totalPossibleScore);
-    if(currGame->score == currGame->totalPossibleScore && currGame->numValidWords>0)
+    if(currGame->numValidWords>0)
     {
-        printf("Nice job! You guessed every possible word in the board\n");
+        if(currGame->score == currGame->totalPossibleScore)
+            printf("Nice job! You guessed every possible word in the board\n");
+        printf("Hit enter to see all valid words\n");
+        fflush(stdin);
+        getchar();
+        for(int i =0; i<currGame->numValidWords; i++)
+        {
+            printf("Word %d: %s\n", i+1, currGame->validWordList[i]);
+        }
     }
+
     printf("Hit enter to return to main menu");
     fflush(stdin);
-    freeBoard(gameBoard);
     getchar();
+    freeBoard(gameBoard);
     if(currGame->score > currGame->highScore)
     {
         currGame->highScore = currGame->score;
@@ -221,10 +238,18 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
                 break;
             for(int i=0; i<currGame->numValidWords; i++)
             {
-                if((strncmp(userInput,currGame->validWordList[i], 45) == 0 && currGame->beenGuessed[i] == false))
+                //printf("validWord = %s\n", currGame->validWordList[i]);
+                if(currGame->beenGuessed[i] == true )
+                {
+                    guessedCorrect = true; //did guess a correct word
+                    printf("You've already used word %s, no points", userInput);
+                    break;
+                }
+                if((strncmp(userInput,currGame->validWordList[i], 45) == 0))
                 {
                     printf("%s is a match! You receive %d points", userInput, findPoints(userInput));
                     currGame->score += findPoints((userInput));
+                    currGame->beenGuessed[i] = true;
                     guessedCorrect = true;
                     break;
                 }

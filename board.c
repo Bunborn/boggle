@@ -12,16 +12,16 @@
 
 void getBoardInfo(struct board *gameBoard) //returns totalLetters
 {
-    printf("Number of horizontal letters:" );
-    gameBoard->rows = getValidInt();
-    printf("Number of vertical letters: ");
-    gameBoard->cols = getValidInt();
-    if(gameBoard->rows < 2 || gameBoard->cols < 2) //invalid board size
+    printf("Choose your board dimension (MxM):\n" );
+    int dimension = getValidInt();
+    gameBoard->rows = dimension;
+    gameBoard->cols = dimension;
+    if(dimension < 2) //invalid board size
     {
-        printf("This is not a valid board. (minimum 3x3)\n");
+        printf("This is not a valid board. (minimum 2x2)\n");
         getBoardInfo(gameBoard);
     }
-    if(gameBoard->rows > 20 || gameBoard->cols > 20)
+    if(gameBoard->rows > 10 || gameBoard->cols > 10)
     {
         printf("WARNING: Large game boards can lead to poor rendering and long load times.");
     }
@@ -40,11 +40,11 @@ void fillBoard(struct board *gameBoard)
 void buildBoard(struct board *gameBoard)
 {
     gameBoard->cubes = (char**) calloc(gameBoard->rows, sizeof(char*));
-    gameBoard->isVisited = (bool**) calloc(gameBoard->rows, sizeof(bool*));
+    gameBoard->isVisited = (int**) calloc(gameBoard->rows, sizeof(int*));
     for ( int i = 0; i < gameBoard->rows; i++ )
     {
         gameBoard->cubes[i] = (char*) calloc(gameBoard->cols, sizeof(char));
-        gameBoard->isVisited[i] = (bool*) calloc(gameBoard->cols, sizeof(bool));
+        gameBoard->isVisited[i] = (int*) calloc(gameBoard->cols, sizeof(int));
     }
 }
 char makeRandomCharacter()
