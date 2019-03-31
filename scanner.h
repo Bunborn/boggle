@@ -1,10 +1,13 @@
 #ifndef SCANNER_H
 #define SCANNER_H
+
 /* VERSION 1.3
  *
  * scanner.h - public interface to scanner.c, the scanner module
  *
  */
+
+#include <stdio.h>  //for use of FILE
 
 extern int readInt(FILE *);
 extern double readReal(FILE *);
