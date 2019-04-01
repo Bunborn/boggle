@@ -384,7 +384,7 @@ void boggleSolver(struct board * gameBoard, struct game * currGame, struct dicti
     printf("The total possible SCORE was %d with %d words.\n", currGame->totalPossibleScore, currGame->numValidWords);
     if(currGame->numValidWords>0)
     {
-        printf("Hit enter to see all valid words\n");
+        printf("Hit enter to see all valid words");
         readLine(stdin);
         for(int i =0; i<currGame->numValidWords; i++)
         {
@@ -408,7 +408,7 @@ void printLoadingBar(struct board * gameBoard)
 void printRules()
 {
     printf("\nFind as many words as you can on the given board!\n");
-    printf("You will have 3 minutes to find these words.\n");
+    printf("You will have a time limit to find these words.\n");
     printf("The letters must form a chain - which can be connected horizontally, vertically, or diagonally from one another.\n");
     printf("Words must contain at least 3 letters.\n");
     printf("This program will allow words from the dictionary file \"dictionary.txt\".\n");
