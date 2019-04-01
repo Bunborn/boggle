@@ -1,8 +1,8 @@
 # Boggle
-This readme is split into the following sections. A video (HERE) demonstrates the game and basic setup.
-### Game overview
-### Setup
-### Code layout
+This readme is split into the following sections. A video ( https://youtu.be/6FsHfYGICFc ) demonstrates the game and basic setup.
+### [Game overview](https://github.com/Bunborn/boggle/blob/master/README.md#game-overview-1)
+### [Setup](https://github.com/Bunborn/boggle/blob/master/README.md#setup-1)
+### [Code layout](https://github.com/Bunborn/boggle/blob/master/README.md#code-layout-1)
 ------------------------------------------------------------------------------------------------------------------------
 # Game overview
 C program that allows you to play boggle! In ascii format on Linux systems ( Tested on Ubuntu 18.04 LTS )
