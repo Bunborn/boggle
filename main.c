@@ -57,7 +57,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         else if(strncmp(response, "2", 2) == 0)
         {
             resetMultiPlayerGame(currGame);
-            printf("How many players (2-10)\n?");
+            printf("How many players (2-10)?\n");
             int playerNum = getValidInt();
             while(playerNum < 2 || playerNum > 10)
             {
@@ -81,9 +81,6 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
         else if(strncmp(response, "6", 2) == 0)
         {
             printf("See you next time for more boggle'ing!\n");
-            freeBoard(gameBoard);
-            freeDictionary(myDict);
-            freeGame(currGame);
             exit(0);
         }
         else

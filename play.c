@@ -29,7 +29,7 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
 void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, bool isFirstRun, char* path)
 {
     int pathLength = strLength(path);
-    if((pathLength == 0 && isFirstRun == false) || pathLength > 20)
+    if((pathLength == 0 && isFirstRun == false) || pathLength > 49)
     {
         return;
     }
