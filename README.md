@@ -30,7 +30,7 @@ you to add it. After moving a dictionary file into the boggle directory, simply 
 
 A recommended dictionary file can be found in most Linux systems under **/usr/share/dict/words** (If you cannot find it there, type in this command into your Ubuntu machine - *sudo find / -name "words" -print* )
 
-Move this words file into your boggle directory and then run the following two commands to shorten the word list of illegal charcters. You don't have to, but it is recommended!
+Move this words file into your boggle directory if it is not in /user/share/dict and then run the following two commands to shorten the word list of illegal charcters. You don't have to, but it is recommended! If you move the file, just remove the /user/share/dict/ from the script!
 
 1. grep -v "'" /usr/share/dict/words >> temp.txt
  
