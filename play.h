@@ -23,18 +23,16 @@ struct game
     int * multiPlayerScore;
 };
 
-
-
-void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame);
-void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, bool isFirstRun, char* path);
-void buildGame(struct game *currGame, struct dictionary *myDict);
-int findPoints(char* string);
+void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame); //finds all legal words on boggle board
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, bool isFirstRun, char* path); //DFS used in findAllWords
+bool isAllowed(int row, int col, struct board *gameBoard); //sees if allowed to move into this space in DFS
+void buildGame(struct game *currGame, struct dictionary *myDict); //allocates memory
+int findPoints(char* string); //finds points for a string
 void printScore(struct game *currGame);
 void fillValidWords(struct game *currGame, struct dictionary *myDict);
-void setVisitedFlagsFalse(struct board *gameBoard);
-void resetGame(struct game * currGame);
+void setVisitedFlagsFalse(struct board *gameBoard); //sets flags for all letter cubes as false during game
+void resetGame(struct game * currGame); //reset scores, etc
 void resetMultiPlayerGame(struct game * currGame);
-bool isAllowed(int row, int col, struct board *gameBoard);
-
 void freeGame(struct game *currGame);
+
 #endif //BOGGLE_PLAY_H

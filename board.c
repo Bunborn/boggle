@@ -10,7 +10,7 @@
 #include "board.h"
 #include "words.h"
 
-void getBoardInfo(struct board *gameBoard) //returns totalLetters
+void getBoardInfo(struct board *gameBoard)
 {
     printf("Choose your board dimension (MxM):\n" );
     int dimension = getValidInt();
@@ -26,7 +26,7 @@ void getBoardInfo(struct board *gameBoard) //returns totalLetters
         printf("WARNING: Large game board detected. Longer than normal load time and possible screen rendering issues.\n");
     }
 }
-void fillBoard(struct board *gameBoard)
+void fillBoard(struct board *gameBoard) //fills board with random charcters
 {
     for(int cols = 0; cols < gameBoard->cols; cols++)
     {

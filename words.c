@@ -43,25 +43,25 @@ void buildDictionary(struct dictionary *myDict)
 }
 bool couldBeValid(char* string, struct dictionary *myDict, int strLength)
 {
-    for(int i=0; i<myDict->numWords; i++)
+    for(int i=0; i<myDict->numWords; i++) //goes through dictionary
     {
-        if(strncmp(string, myDict->words[i], strLength) == 0)
+        if(strncmp(string, myDict->words[i], strLength) == 0) //if this string matches with at least part of one string (from the front) of dictionary
         {
             return true;
         }
     }
     return false;
 }
-int findValidWord(char* input, struct dictionary *myDict)
+int findValidWord(char* input, struct dictionary *myDict) //checks if word is valid and matches dictionary
 {
     int length = strLength(input);
-    if(length < 3)
+    if(length < 3) //words must be greater than 3 letters
     {
         return false;
     }
     for(int i=0; i<myDict->numWords; i++)
     {
-        if((strncmp(input, myDict->words[i], 50) == 0) && myDict->isFound[i] == false)
+        if((strncmp(input, myDict->words[i], 50) == 0) && myDict->isFound[i] == false) //compares to see if already found and if matches dictionary. No 50+ letter word in English lagnuage
         {
             myDict->isFound[i] = true;
             return i;
@@ -69,16 +69,16 @@ int findValidWord(char* input, struct dictionary *myDict)
     }
     return 0;
 }
-int strLength(char* input)
+int strLength(char* input) //calculates length of s tring
 {
-    int len = 0;
-    while(input[len] != '\0')
+    int length = 0;
+    while(input[length] != '\0')
     {
-        len++;
+        length++;
     }
-    return len;
+    return length;
 }
-void freeDictionary(struct dictionary *myDict)
+void freeDictionary(struct dictionary *myDict) //memory deallocation
 {
     for ( int i = 0; i < myDict->numWords; i++ )
     {
