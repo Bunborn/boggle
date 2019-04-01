@@ -56,7 +56,7 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
     printBoggleArt();
     while (1)
     {
-        printf("1 for single-player, 2 for multi-player, 3 for solver,\n4 to see rules, 5 to see this session's highscore, 6 to exit program \n");
+        printf("Press 1 for Single-player, 2 for Multi-player, 3 for Boggle solver,\n4 to see rules, 5 to see this session's highscore, 6 to exit program \n");
         char* response = readLine(stdin);
         if(strncmp(response, "1", 2) == 0)
         {
