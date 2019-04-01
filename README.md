@@ -34,7 +34,7 @@ Move this words file into your boggle directory if it is not in /user/share/dict
 
 **grep -v "'" /usr/share/dict/words >> dictionary.txt**
  
-
+For simplicity, you can also download the dictionary.txt file I use during the Youtube demo here through UA Box - https://alabama.box.com/s/i2vwhcy7oaq2s7d6oltxyg30w9yphj58 . Don't forget to add it into the boggle directory after downloading!
 
 ------------------------------------------------------------------------------------------------------------------------
 # Code layout
