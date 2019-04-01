@@ -116,17 +116,15 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     readLine(stdin);
     printBoard(gameBoard);
     currGame->score = 0;
-    clock_t startTime, currentTime;
     double timeElapsed = 0.0;
-    startTime = clock();
     char* userInput;
     bool guessedCorrect;
+    time_t start = time(NULL);
     while(timeElapsed<gameTime)
     {
         userInput = readLine(stdin);
         guessedCorrect = false;
-        currentTime = clock();
-        timeElapsed = (double)(currentTime - startTime)/CLOCKS_PER_SEC;
+        timeElapsed = (double)(time(NULL) - start);
         if(timeElapsed > gameTime)
         {
             break;
@@ -137,7 +135,7 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
         else if(strncmp(userInput,"2",2) == 0)
             printScore(currGame);
         else if(strncmp(userInput,"3",2) == 0)
-            printf("Time left = %f seconds.\n", gameTime - timeElapsed);
+            printf("Time left = %.2f seconds.\n", gameTime - timeElapsed);
         else if(strncmp(userInput,"4",2) == 0)
             break;
         else
@@ -224,18 +222,15 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
         readLine(stdin);
         printBoard(gameBoard);
         currGame->score = 0;
-        clock_t startTime;
-        clock_t currentTime;
         double timeElapsed = 0.0;
-        startTime = clock();
+        time_t start = time(NULL);
         char* userInput;
         bool guessedCorrect;
         while(timeElapsed<gameTime)
         {
             userInput = readLine(stdin);
             guessedCorrect = false;
-            currentTime = clock();
-            timeElapsed = (double)(currentTime - startTime)/CLOCKS_PER_SEC;
+            timeElapsed = (double)(time(NULL) - start);
             if(timeElapsed > gameTime)
             {
                 break;
@@ -245,7 +240,7 @@ void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct di
             else if(strncmp(userInput,"2",2) == 0)
                 printScore(currGame);
             else if(strncmp(userInput,"3",2) == 0)
-                printf("Time left = %f seconds.\n", gameTime - timeElapsed);
+                printf("Time left = %.2f seconds.\n", gameTime - timeElapsed);
             else if(strncmp(userInput,"4",2) == 0)
                 break;
             else

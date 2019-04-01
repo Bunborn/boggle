@@ -19,6 +19,7 @@ void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct gam
         {
             isFirstRun = true;
             printf("#");
+	    fflush(stdout);
             path[0] = '\0';
             search(gameBoard, myDict, currGame, i, j, isFirstRun, path);
         }
