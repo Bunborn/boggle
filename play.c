@@ -10,55 +10,55 @@ int col[] = { -1, 1, 0, -1, -1, 1, 0, 1 };
 
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame) //DFS algo to find all legal words on the board
 {
-    char* path = malloc(sizeof(char) * 126); //stores stack
-    bool isFirstRun = true; //if the first time being ran in the DFS
+    char* path = malloc(sizeof(char) * 126); //stores current path
     setVisitedFlagsFalse(gameBoard); //sets all flags as not visited yet if carried over from previous game
     for(int i = 0; i < gameBoard->rows; i++)
     {
-        for(int j=0; j<gameBoard->rows; j++) //searches every letter cube on the board
+        for(int j = 0; j < gameBoard->cols; j++) //searches every letter cube on the board (FIXED: was gameBoard->rows)
         {
-            isFirstRun = true;
             printf("#"); //updates loading bar
-	        fflush(stdout);
+            fflush(stdout);
             path[0] = '\0'; //zero out string
-            search(gameBoard, myDict, currGame, i, j, isFirstRun, path); //perform DFS on letter cube to find all possible words that match with dictionary
+            search(gameBoard, myDict, currGame, i, j, myDict->root, path);
         }
     }
+    free(path);
 }
 
-void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, bool isFirstRun, char* path)
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int i, int j, struct TrieNode *node, char* path)
 {
-    int pathLength = strLength(path);
-    if((pathLength == 0 && isFirstRun == false) || pathLength > 49) //if no string or stack is larger than any possible word
-    {
-        return;
-    }
-    gameBoard->isVisited[i][j] = true; //mark this cube as being visited in DFS
-    isFirstRun = false;
+    // Check if this letter continues a valid prefix in the trie
+    char letter = tolower((unsigned char)gameBoard->cubes[i][j]);
+    int idx = letter - 'a';
+    if(idx < 0 || idx >= 26) return;
 
-    path[pathLength] = tolower(gameBoard->cubes[i][j]); //add letter cube onto the stack
-    path[pathLength+1] = '\0'; //end char for the stack
-    bool possiblePath = couldBeValid(path, myDict, pathLength); //checks if the new letter added to stack could be a string or part of a string
-    if(possiblePath) //optimizes the search by looking if possibly in the dictionary, pursuing this path
+    struct TrieNode *nextNode = node->children[idx];
+    if(nextNode == NULL) return; // no words with this prefix, prune entire branch
+
+    int pathLength = strLength(path);
+    if(pathLength > 49) return;
+
+    gameBoard->isVisited[i][j] = true;
+    path[pathLength] = letter;
+    path[pathLength + 1] = '\0';
+
+    if(nextNode->is_word && pathLength + 1 >= 3 && myDict->isFound[nextNode->word_index] == false)
     {
-        int wordIndex = findValidWord(path, myDict); //sees if in dictionary and if so where
-        if(wordIndex>0)
-        {
-            myDict->isFound[wordIndex] = true; //mark that the word is found
-            currGame->numValidWords++;
-            currGame->totalPossibleScore += findPoints(path);
-        }
+        myDict->isFound[nextNode->word_index] = true;
+        currGame->numValidWords++;
+        currGame->totalPossibleScore += findPoints(path);
     }
+
     for(int dir = 0; dir < 8; dir++) //try all directions possible around the cube
     {
-        if((isAllowed(i + row[dir], j+col[dir], gameBoard)) && possiblePath == true) //if legal move and substring is legal and possibly good
+        if(isAllowed(i + row[dir], j + col[dir], gameBoard))
         {
-            search(gameBoard, myDict, currGame, i + row[dir], j + col[dir], isFirstRun, path);
+            search(gameBoard, myDict, currGame, i + row[dir], j + col[dir], nextNode, path);
         }
     }
-    pathLength = strLength(path); //update pathLegnth
-    path[pathLength-1] = '\0'; //pop this letter cube from the stack
-    gameBoard->isVisited[i][j] = false; //mark this cube as not being visited so will be hit by other stacks
+
+    path[pathLength] = '\0'; //pop this letter from the path
+    gameBoard->isVisited[i][j] = false;
 }
 
 int findPoints(char* string) //finds how many points a word is worth

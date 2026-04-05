@@ -5,23 +5,38 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 #ifndef BOGGLE_WORDS_H
 #define BOGGLE_WORDS_H
+
+#define ALPHABET_SIZE 26
+
+struct TrieNode
+{
+    struct TrieNode *children[ALPHABET_SIZE];
+    bool is_word;
+    int word_index;
+};
+
 struct dictionary
 {
     int numWords;
     FILE *dictionaryPtr;
     int* isFound;
     char** words; //matrix of strings
+    struct TrieNode *root;
 };
 
 void buildDictionary(struct dictionary *myDictionary);
 int countDictionaryWords(struct dictionary *myDictionary);
 void readDictionaryFile(struct dictionary *myDictionary);
-bool couldBeValid(char* string, struct dictionary *myDict, int strLength);  //if this string matches with at least part of one string (from the front) of dictionary
-int findValidWord(char* input, struct dictionary *myDict); //checks if word is valid and matches dictionary
 int strLength(char* input);
 void freeDictionary(struct dictionary *myDictionary);
+
+struct TrieNode *newTrieNode();
+void insertTrie(struct TrieNode *root, char *word, int index);
+void buildTrie(struct dictionary *myDict);
+void freeTrie(struct TrieNode *node);
 
 #endif //BOGGLE_WORDS_H

@@ -24,7 +24,7 @@ struct game
 };
 
 void findAllWords(struct board *gameBoard, struct dictionary *myDict, struct game *currGame); //finds all legal words on boggle board
-void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, bool isFirstRun, char* path); //DFS used in findAllWords
+void search(struct board *gameBoard, struct dictionary *myDict, struct game *currGame, int row, int col, struct TrieNode *node, char* path); //DFS used in findAllWords
 bool isAllowed(int row, int col, struct board *gameBoard); //sees if allowed to move into this space in DFS
 void buildGame(struct game *currGame, struct dictionary *myDict); //allocates memory
 int findPoints(char* string); //finds points for a string

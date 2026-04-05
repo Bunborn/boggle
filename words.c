@@ -40,34 +40,47 @@ void buildDictionary(struct dictionary *myDict)
         myDict->words[i] = (char*) calloc(40, sizeof(char));
         myDict->isFound[i] = false;
     }
+    myDict->root = NULL; // will be built after readDictionaryFile
 }
-bool couldBeValid(char* string, struct dictionary *myDict, int strLength)
+struct TrieNode *newTrieNode()
 {
-    for(int i=0; i<myDict->numWords; i++) //goes through dictionary
-    {
-        if(strncmp(string, myDict->words[i], strLength) == 0) //if this string matches with at least part of one string (from the front) of dictionary
-        {
-            return true;
-        }
-    }
-    return false;
+    struct TrieNode *node = calloc(1, sizeof(struct TrieNode));
+    node->is_word = false;
+    node->word_index = -1;
+    return node;
 }
-int findValidWord(char* input, struct dictionary *myDict) //checks if word is valid and matches dictionary
+
+void insertTrie(struct TrieNode *root, char *word, int index)
 {
-    int length = strLength(input);
-    if(length < 3) //words must be greater than 3 letters
+    struct TrieNode *curr = root;
+    for(int i = 0; word[i] != '\0'; i++)
     {
-        return false;
+        int c = tolower((unsigned char)word[i]) - 'a';
+        if(c < 0 || c >= ALPHABET_SIZE) return; // skip words with non-alpha chars
+        if(curr->children[c] == NULL)
+            curr->children[c] = newTrieNode();
+        curr = curr->children[c];
     }
-    for(int i=0; i<myDict->numWords; i++)
+    curr->is_word = true;
+    curr->word_index = index;
+}
+
+void buildTrie(struct dictionary *myDict)
+{
+    myDict->root = newTrieNode();
+    for(int i = 0; i < myDict->numWords; i++)
     {
-        if((strncmp(input, myDict->words[i], 50) == 0) && myDict->isFound[i] == false) //compares to see if already found and if matches dictionary. No 50+ letter word in English lagnuage
-        {
-            myDict->isFound[i] = true;
-            return i;
-        }
+        if(strLength(myDict->words[i]) >= 3)
+            insertTrie(myDict->root, myDict->words[i], i);
     }
-    return 0;
+}
+
+void freeTrie(struct TrieNode *node)
+{
+    if(node == NULL) return;
+    for(int i = 0; i < ALPHABET_SIZE; i++)
+        freeTrie(node->children[i]);
+    free(node);
 }
 int strLength(char* input) //calculates length of s tring
 {
@@ -85,5 +98,6 @@ void freeDictionary(struct dictionary *myDict) //memory deallocation
         free(myDict->words[i]);
     }
     free(myDict->words);
+    freeTrie(myDict->root);
     free(myDict);
 }

@@ -35,9 +35,10 @@ int main() {
     }
     struct dictionary *myDictionary = malloc(sizeof(struct dictionary));
     myDictionary->dictionaryPtr = fptr; //points dictionary struct to text file
-    countDictionaryWords(myDictionary);    
+    countDictionaryWords(myDictionary);
     buildDictionary(myDictionary);
     readDictionaryFile(myDictionary);
+    buildTrie(myDictionary);
 
     struct game *currGame = malloc(sizeof(struct game));
     buildGame(currGame, myDictionary);
