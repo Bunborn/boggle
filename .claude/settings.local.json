@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where gdb:*)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(gcc -o boggle main.c scanner.c board.c play.c words.c -I.)",
+      "Bash(printf \"1\\\\n2\\\\n10\\\\n\\\\n\")",
+      "Bash(./boggle.exe)"
+    ]
+  }
+}

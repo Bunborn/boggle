@@ -10,6 +10,8 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <conio.h>
+#include <windows.h>
 #include "board.h"
 #include "scanner.h"
 #include "words.h"
@@ -19,6 +21,8 @@ void menu(struct board * gameBoard, struct game * currGame, struct dictionary * 
 void printRules(); //prints boggle rules
 void printBoggleArt();
 void printLoadingBar(struct board * gameBoard);
+void printPerformanceFeedback(int score, int totalPossibleScore);
+char* timedReadLine(int gameTime, time_t start, double *timeElapsed, bool *warned30, bool *warned15, bool *warned5);
 void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict);
 void multiPlayerGame(struct board * gameBoard, struct game * currGame, struct dictionary * myDict, int players);
 void boggleSolver(struct board * gameBoard, struct game * currGame, struct dictionary * myDict);
@@ -124,12 +128,14 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
     double timeElapsed = 0.0; //counts time elapsed since user began guessing
     char* userInput; //stores user guesses and other input
     bool guessedCorrect;
+    bool warned30 = (gameTime <= 30); //skip warning if game is shorter than the threshold
+    bool warned15 = (gameTime <= 15);
+    bool warned5  = (gameTime <= 5);
     time_t start = time(NULL); //time index for startTime of program
     while(timeElapsed<gameTime)
     {
-        userInput = readLine(stdin);
+        userInput = timedReadLine(gameTime, start, &timeElapsed, &warned30, &warned15, &warned5);
         guessedCorrect = false;
-        timeElapsed = (double)(time(NULL) - start);
         if(timeElapsed > gameTime)
         {
             break; //if out of time, don't let this guess go through
@@ -156,7 +162,7 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
                         break;
                     }
                     int points = findPoints(userInput);
-                    printf("%s is a match! You receive %d points", userInput, points);
+                    printf("%s is a match! You receive %d points\n", userInput, points);
                     currGame->score += points;
                     currGame->beenGuessed[wordNum] = true;
                     guessedCorrect = true;
@@ -165,12 +171,13 @@ void singlePlayerGame(struct board * gameBoard, struct game * currGame, struct d
             }
             if(guessedCorrect == false)
             {
-                printf("%s is NOT a match.", userInput);
+                printf("%s is NOT a match.\n", userInput);
             }
         }
     }
-    printf("Game over! You scored a total of %d\n",currGame->score);
+    printf("\nGame over! You scored a total of %d\n", currGame->score);
     printf("The total possible SCORE was %d with %d words.\n", currGame->totalPossibleScore, currGame->numValidWords);
+    printPerformanceFeedback(currGame->score, currGame->totalPossibleScore);
     if(currGame->numValidWords>0) //if there were words to be found on the board
     {
         if(currGame->score == currGame->totalPossibleScore)
@@ -394,6 +401,106 @@ void boggleSolver(struct board * gameBoard, struct game * currGame, struct dicti
     else
     {
         printf("No valid words in this board\n");
+    }
+}
+void printPerformanceFeedback(int score, int totalPossibleScore)
+{
+    if(totalPossibleScore == 0)
+    {
+        printf("No words were possible on this board.\n");
+        return;
+    }
+    int pct = (score * 100) / totalPossibleScore;
+    printf("You scored %d%% of the total possible points.\n", pct);
+    if(pct == 0)
+        printf("No points scored. Keep practicing!\n");
+    else if(pct <= 15)
+        printf("Beginner range. A typical casual player finds around 15-25%% of possible points.\n");
+    else if(pct <= 30)
+        printf("Casual player range. Most recreational players score in this zone.\n");
+    else if(pct <= 50)
+        printf("Above average! You're finding more words than most casual players.\n");
+    else if(pct <= 70)
+        printf("Strong player! You're well above the average Boggle player.\n");
+    else if(pct <= 90)
+        printf("Expert level! Only experienced Boggle players score this high.\n");
+    else if(pct < 100)
+        printf("Near perfect! You found almost every possible word on the board.\n");
+    else
+        printf("Perfect score! You found every single word on the board.\n");
+}
+char* timedReadLine(int gameTime, time_t start, double *timeElapsed,
+                    bool *warned30, bool *warned15, bool *warned5)
+{
+    char *buffer = malloc(256);
+    int index = 0;
+    buffer[0] = '\0';
+
+    while(1)
+    {
+        *timeElapsed = (double)(time(NULL) - start);
+        double timeLeft = gameTime - *timeElapsed;
+
+        if(!*warned5 && timeLeft <= 5 && timeLeft > 0)
+        {
+            printf("\n*** 5 seconds left! ***\n");
+            if(index > 0) { buffer[index] = '\0'; printf("%s", buffer); } //reprint partial word
+            fflush(stdout);
+            *warned5 = true;
+        }
+        else if(!*warned15 && timeLeft <= 15)
+        {
+            printf("\n*** 15 seconds remaining! ***\n");
+            if(index > 0) { buffer[index] = '\0'; printf("%s", buffer); }
+            fflush(stdout);
+            *warned15 = true;
+        }
+        else if(!*warned30 && timeLeft <= 30)
+        {
+            printf("\n*** 30 seconds remaining! ***\n");
+            if(index > 0) { buffer[index] = '\0'; printf("%s", buffer); }
+            fflush(stdout);
+            *warned30 = true;
+        }
+
+        if(timeLeft <= 0)
+        {
+            printf("\n");
+            buffer[index] = '\0';
+            return buffer;
+        }
+
+        if(_kbhit())
+        {
+            int ch = _getch();
+            if(ch == '\r') //Enter key
+            {
+                printf("\n");
+                fflush(stdout);
+                buffer[index] = '\0';
+                return buffer;
+            }
+            else if(ch == 0 || ch == 224) //special key prefix (arrows, function keys), discard
+            {
+                _getch();
+            }
+            else if(ch == '\b' && index > 0) //Backspace
+            {
+                index--;
+                printf("\b \b");
+                fflush(stdout);
+            }
+            else if(ch >= 32 && ch < 127 && index < 254) //printable ASCII
+            {
+                buffer[index++] = (char)ch;
+                putchar(ch);
+                fflush(stdout);
+            }
+        }
+        else
+        {
+            Sleep(10); //avoid busy-waiting
+        }
     }
 }
 void printLoadingBar(struct board * gameBoard) //prints empty loading bar

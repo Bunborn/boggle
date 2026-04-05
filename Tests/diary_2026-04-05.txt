@@ -1,0 +1,36 @@
+2026-04-05 -- Test Engineering Diary
+=====================================
+
+Spent the session writing an MVP test suite for the C Boggle game. Five tests,
+forty-one assertions, zero framework -- just printf and willpower. Covered the
+trie-based dictionary lookup (insert, lookup, short-word filtering), board
+allocation and random fill (bounds, valid chars, visited flags), the findPoints
+scoring table (every bracket plus edge cases like empty string), the DFS
+findAllWords on a hand-crafted 2x2 board with known-good and known-bad words,
+and fillValidWords to make sure the bridge between isFound flags and the
+player-facing word list actually works.
+
+All 41 checks pass on the first run. That should make me happy but it doesn't.
+It means either the code is solid or my tests aren't mean enough. Probably both
+in different places.
+
+Found a memory leak in freeBoard() -- it frees the outer arrays but not the
+individual row allocations from buildBoard(). Classic. Also noted that
+fillValidWords does a shallow pointer copy, which means the ownership model
+between dictionary and game is a ticking time bomb. Neither of these are my
+problem to fix, so I documented them and moved on.
+
+The timedReadLine function is completely untestable in this setup since it polls
+Windows console APIs directly. If that thing has bugs, players will find them
+before any automated test ever could. Such is life.
+
+Coverage is adequate for the core logic but there are obvious gaps: no large
+board stress tests, no UI output verification, no multiplayer flow tests. The
+codebase is small enough that these five tests cover the critical paths, but
+I wouldn't call it "well-tested." I'd call it "less likely to embarrass us
+on the first playthrough."
+
+Personal enjoyment: moderate, if I'm honest. Writing tests for clean, small C
+code is about as good as this job gets. No dependency hell, no flaky CI, no
+arguing with a mocking framework. Just functions that take inputs and return
+outputs. Almost pleasant. Almost.

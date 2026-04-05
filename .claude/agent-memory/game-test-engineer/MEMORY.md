@@ -1,0 +1,1 @@
+- [Boggle testing status](project_boggle_testing.md) — MVP test suite, known bugs (freeBoard leak, fillValidWords shallow copy), compile/run instructions
