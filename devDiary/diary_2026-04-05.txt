@@ -1,0 +1,18 @@
+2026-04-05 -- Developer Diary
+=====================================
+
+Fixed the memory leak in freeBoard() that the test diary flagged. Classic
+two-level allocation, one-level free -- buildBoard() allocates each row of
+cubes and isVisited individually, but the old freeBoard() only freed the outer
+pointer arrays and then called it a day. Valgrind would have had a field day.
+
+The fix is exactly what you'd expect: loop over the rows, free each inner
+array first, then free the outer arrays, then free the board struct itself.
+Mirror the allocation order in reverse. Five extra lines, no clever tricks.
+
+Resisted the urge to refactor anything else while I was in there. The rest of
+buildBoard() and freeBoard() is fine -- no reason to touch it. In and out.
+
+The QA diary also called out fillValidWords doing a shallow pointer copy as a
+"ticking time bomb." That one's on the list but it's a different problem for
+a different day. One thing at a time.

@@ -83,6 +83,12 @@ void printBoard(struct board *gameBoard)
 
 void freeBoard(struct board *gameBoard)
 {
+    /* Free each row before the outer pointer arrays — mirrors buildBoard's allocation order */
+    for (int i = 0; i < gameBoard->rows; i++)
+    {
+        free(gameBoard->cubes[i]);
+        free(gameBoard->isVisited[i]);
+    }
     free(gameBoard->cubes);
     free(gameBoard->isVisited);
     free(gameBoard);
