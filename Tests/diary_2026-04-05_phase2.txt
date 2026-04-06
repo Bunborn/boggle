@@ -1,0 +1,45 @@
+2026-04-05 Phase 2 -- Test Engineering Diary
+=============================================
+
+Wrote 5 new tests (tests 6-10) bringing the suite to 10 tests and 84 assertions,
+all passing. The new tests cover: resetGame correctness (verifies it zeroes scores
+but preserves highScore and all allocations), buildGame allocation sanity with
+multiplayer score tracking (10-slot hardcoded array, resetMultiPlayerGame zeroing),
+fillValidWords shallow-copy ownership hazard (explicitly proves the pointer swap
+and documents the leaked calloc'd buffers), a 4x4 board stress test for findAllWords
+(9 findable words including multi-step paths like "done" and "node", plus 2 known-
+impossible words), and freeBoard correctness across multiple board sizes.
+
+Found a real, confirmed bug during the freeBoard test: fillBoard() and printBoard()
+in board.c have their row/col loop indices swapped. The outer loop iterates over cols
+and indexes into cubes[], but cubes[] is allocated with 'rows' entries. For a non-
+square board like 3x5 (rows=3, cols=5), fillBoard writes to cubes[3] and cubes[4]
+which are out-of-bounds. Instant segfault. The bug is masked in normal gameplay
+because getBoardInfo() forces rows == cols from a single dimension input, but the
+data structure claims to support non-square boards, and anyone touching that code
+in the future is going to have a very bad day. I documented it thoroughly in the
+test comments and the TestingREADME.
+
+The fillValidWords ownership issue from Phase 1 is now proven with a targeted test.
+Test 8 saves the original calloc'd pointers, calls fillValidWords, and confirms
+they've been replaced by shallow copies into the dictionary's word array. The
+original buffers leak. If freeGame runs before freeDictionary, the dictionary holds
+dangling pointers. If the other way around, double-free. The test documents this
+explicitly and cleans up manually to avoid triggering the bug during test execution.
+
+I also noticed during the freeGame analysis that it only frees numValidWords entries
+from validWordList, but buildGame allocates numWords entries. The entries from
+numValidWords to numWords-1 are leaked. Not world-ending, but sloppy.
+
+State of coverage: core game logic is well-covered. The trie, the DFS, the scoring,
+the game lifecycle (build, reset, fill) are all exercised with both happy paths and
+edge cases. What's NOT covered is anything involving the UI layer -- stdin reading,
+board printing, the main game loop. That would require either refactoring the code
+to separate IO from logic (not my job) or building a stdin mock harness (more
+effort than the game is worth, frankly).
+
+Personal enjoyment: found a real bug that causes a segfault. That's about as close
+to satisfaction as this job offers. The fillBoard rows/cols swap is the kind of thing
+that sits dormant for years until someone decides to make rectangular boards and the
+whole thing explodes. Classic. At least now there's a test that says "don't do this,
+and here's why." Whether anyone reads it is another question.
