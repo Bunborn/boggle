@@ -28,12 +28,12 @@ void getBoardInfo(struct board *gameBoard)
 }
 void fillBoard(struct board *gameBoard) //fills board with random charcters
 {
-    for(int cols = 0; cols < gameBoard->cols; cols++)
+    for(int row = 0; row < gameBoard->rows; row++)
     {
-        for(int rows=0; rows < gameBoard->rows; rows++)
+        for(int col = 0; col < gameBoard->cols; col++)
         {
-            gameBoard->cubes[cols][rows] = makeRandomCharacter();
-            gameBoard->isVisited[cols][rows] = false;
+            gameBoard->cubes[row][col] = makeRandomCharacter();
+            gameBoard->isVisited[row][col] = false;
         }
     }
 }
@@ -59,22 +59,22 @@ void printBoard(struct board *gameBoard)
     int i=0;
     int j=0;
     printf(" ");
-    for(i=0; i<2*gameBoard->rows+1; i++)
+    for(i=0; i<2*gameBoard->cols+1; i++)
     {
         printf("-");
     }
     printf("\n");
-    for(j=0; j< gameBoard->cols; j++)
+    for(i=0; i< gameBoard->rows; i++)
     {
         printf("|");
-        for(i=0; i< gameBoard->rows; i++)
+        for(j=0; j< gameBoard->cols; j++)
         {
-            printf(" %c", gameBoard->cubes[j][i]);
+            printf(" %c", gameBoard->cubes[i][j]);
         }
         printf(" |\n");
     }
     printf(" ");
-    for(i=0; i<2*gameBoard->rows+1; i++)
+    for(i=0; i<2*gameBoard->cols+1; i++)
     {
         printf("-");
     }
